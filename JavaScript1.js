@@ -38,6 +38,11 @@
 	});
 	$('#taskContent').delegate('p.taskTitle','click',function(e){
 		var currentItem = $(e.target.nextSibling);
+		if (currentItem.siblings('div.editDiv').length){
+			if(currentItem.find('div.editDiv').is(':visible')){
+				return;
+			}
+		}
 		if(currentItem.is(":visible"))
 			currentItem.hide();
 		else{
