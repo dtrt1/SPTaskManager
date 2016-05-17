@@ -1,0 +1,156 @@
+.taskColumn {
+	float: left;
+	width: 30%;
+}
+.taskTitle {
+	font-weight: bold;
+}
+.taskDiv ul {
+	list-style: none;
+	margin: 0px;
+	padding: 4px;
+	min-height: 100px;
+}
+.taskDiv li {
+	font-size: 90%;
+	display: block;
+	padding: 0.4em 0 0.4em 0.5em;
+	text-decoration: none;
+}
+#notStartedTasksDiv li {
+	border-left: 12px solid #71af0e;
+	border-right: 3px solid #71af0e;
+	background-color: #e9f9d0;
+	border-bottom: 1px solid #71af0e;
+}
+#notStartedTasksDiv li:hover {
+	background-color: #71af0e;
+	color: white;
+}
+#inProgressTasksDiv li {
+	border-left: 12px solid #efb600;
+	border-right: 3px solid #efb600;
+	background-color: #f1efae;
+	border-bottom: 1px solid #efb600;
+}
+#inProgressTasksDiv li:hover {
+	background-color: #efb600;
+	color: white;
+}
+#completedTasksDiv li {
+	border-left: 12px solid #ef0b00;
+	border-right: 3px solid #ef0b00;
+	background-color: #f3c8c6;
+	border-bottom: 1px solid #ef0b00;
+}
+#completedTasksDiv li:hover {
+	background-color: #ef0b00;
+	color: white;
+}
+.hiddenTemplate {
+	display: none;
+}
+.taskDetailDiv {
+	display: none;
+}
+.moveButtonsDiv {
+	display: inline-block;
+	width: 100%;
+}
+.moveButton {
+	cursor: pointer;
+}
+.moveLeftButton {
+	float: left;
+}
+.moveRightButton {
+	float: right;
+}
+.deleteDiv {
+	float: right;
+}
+.delete {
+	background: red;
+	color: white;
+	font-weight: bolder;
+	padding: 3px;
+	margin: 5px 5px 0px 5px;
+	border: white solid thin;
+	border-top: 0px;
+	cursor: pointer;
+}
+.deleteButton:hover {
+	font-size: 1.3em;
+}
+.yesDeleteButton {
+	background: darkgreen;
+}
+.yesDeleteButton:hover {
+	background: greenyellow;
+}
+.noDeleteButton {
+	background: darkred;
+} 
+.noDeleteButton:hover {
+	background: palevioletred;
+} 
+#newTaskDiv {
+	padding: 5px;
+}
+#newTaskTitle {
+	width: 350px;
+}
+.newTask {
+	border: 3px solid #cccccc;
+	padding: 5px;
+	background-color: white;
+}
+#addTaskButton:hover {
+	border: 3px solid #ff1943;
+	cursor: pointer;
+}
+#newTaskDiv {
+	padding: 5px;
+}
+#newTaskTitle {
+	width: 350px;
+}
+.newTask {
+	border: 3px solid #cccccc;
+	padding: 5px;
+	background-color: white;
+}
+#addTaskButton:hover {
+	border: 3px solid #ff1943;
+	cursor: pointer;
+}
+.edit {
+	width: 90%;
+	padding: 5px;
+	background-color: white;
+	font: inherit;
+	border: 0;
+}
+.editTaskDescription {
+	height: 120px;
+	overflow: hidden;
+}
+.editButton {
+	font-weight: bolder;
+	padding: 5px;
+	border: white solid thin;
+	cursor: pointer;
+	color: white;
+}
+.editTaskSaveButton {
+	background: darkgreen;
+}
+.editTaskSaveButton:hover {
+	background: greenyellow;
+}
+.editTaskCancelButton {
+	background: darkred;
+}
+.editTaskCancelButton:hover {
+	background: palevioletred;
+}

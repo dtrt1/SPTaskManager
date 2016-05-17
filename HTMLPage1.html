@@ -1,0 +1,53 @@
+﻿<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title> -->
+<!-- <script type="text/javascript" src="/_layouts/15/sp.js"></script> -->
+<script src="/OSA/Webparts/jQuery/jquery-2.2.3.min.js"></script>
+<script src="/OSA/Webparts/TaskManager/JavaScript1.js"></script>
+<link href="/OSA/Webparts/TaskManager/style1.css" rel="stylesheet" type="text/css" />
+<!-- </head>
+<body> -->
+	<div id="newTaskDiv">
+		<input id="newTaskTitle" class="newTask" type="text" maxlength="50" />
+		<input type="button" class="newTask" id="addTaskButton" value="Add New Task" />
+	</div> 
+	<!-- Task Content -->
+	<div id="taskContent">
+		<!-- Not Started Tasks -->
+		<div id="notStartedTasksColumn" class="taskColumn">
+			<h3>Not Started</h3>
+			<div class="taskDiv" id="notStartedTasksDiv">
+				<ul />
+			</div>
+		</div>
+		<!-- In Progress Tasks -->
+		<div id="inProgressTasksColumn" class="taskColumn">
+			<h3>In Progress</h3>
+			<div class="taskDiv" id="inProgressTasksDiv">
+				<ul />
+			</div>
+		</div>
+		<!-- Completed Tasks -->
+		<div id="completedTasksColumn" class="taskColumn">
+			<h3>Completed</h3>
+			<div class="taskDiv" id="completedTasksDiv">
+				<ul />
+			</div>
+		</div>
+	</div>
+	<!--Template for Task List Items-->
+<ul class='hiddenTemplate'>
+	<li id="TemplateListItem" class="task">
+		<div class="taskDetailDiv">
+			<p class='taskTitle'>
+				Title</p>
+			<p class='taskDescription'>
+				Description</p>
+		</div>
+	</li>
+</ul>
+<!-- </body>
+</html> -->
