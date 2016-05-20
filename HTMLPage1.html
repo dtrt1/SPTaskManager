@@ -5,15 +5,186 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title></title> -->
 <!-- <script type="text/javascript" src="/_layouts/15/sp.js"></script> -->
-<script src="/OSA/Webparts/jQuery/jquery-2.2.3.min.js"></script>
-<script src="/OSA/Webparts/TaskManager/JavaScript1.js"></script>
+<script src="/OSA/Webparts/jQuery/jquery-2.2.3.min.js" type="text/javascript"></script>
+<script src="/OSA/Webparts/TaskManager/JavaScript1.js" type="text/javascript"></script>
+<script src="/_layouts/15/clienttemplates.js" type="text/javascript"></script>
+<script src="/_layouts/15/clientforms.js" type="text/javascript"></script>
+<script src="/_layouts/15/clientpeoplepicker.js" type="text/javascript"></script>
+<script src="/_layouts/15/autofill.js" type="text/javascript"></script>
+<script src="/_layouts/15/sp.runtime.js" type="text/javascript"></script>
+<!-- <script src="/_layouts/15/sp.core.js" type="text/javascript"></script> -->
+<script src="/_layouts/15/sp.js" type="text/javascript"></script>
 <link href="/OSA/Webparts/TaskManager/style1.css" rel="stylesheet" type="text/css" />
 <!-- </head>
 <body> -->
+	<table class="ms-formtable" style="margin-top: 8px;" border="0" cellpadding="0" cellspacing="0" width="560px">
+		<tbody>
+			<tr>
+				<td nowrap="true" valign="top" width="113px" class="ms-formlabel">
+					<h3 class="ms-standardheader">
+					<nobr>Имя задачи<span class="ms-accentText" title="Это поле является обязательным."> *</span></nobr>
+					</h3>
+				</td>
+				<td valign="top" width="350px" class="ms-formbody">
+				<!-- FieldName="Имя задачи"
+					 FieldInternalName="Title"
+					 FieldType="SPFieldText"-->
+					<input type="text" value="" maxlength="255" id="" title="Имя задачи Обязательное поле" style="ime-mode : " class="ms-long ms-spellcheck-true"><br>
+				</td>
+			</tr>
+			<tr>
+				<td nowrap="true" valign="top" width="113px" class="ms-formlabel">
+					<h3 class="ms-standardheader">
+						<nobr>Срок</nobr>
+					</h3>
+				</td>
+				<td valign="top" width="350px" class="ms-formbody">
+				<!-- FieldName="Срок"
+					 FieldInternalName="DueDate"
+					 FieldType="SPFieldDateTime" -->
+				</td>
+			</tr>
+			<tr>
+				<td nowrap="true" valign="top" width="113px" class="ms-formlabel"><h3 class="ms-standardheader">
+				<nobr>Кому назначено</nobr>
+				</h3>
+				</td>
+				<td valign="top" width="350px" class="ms-formbody">
+				<!-- FieldName="Кому назначено"
+					 FieldInternalName="AssignedTo"
+					 FieldType="SPFieldUserMulti" -->
+				<div dir="none"><div class="sp-peoplepicker-topLevel" id="AssignedTo_53101f38-dd2e-458c-b245-0c236cc13d1a_$ClientPeoplePicker" title="Кому назначено" spclientpeoplepicker="true"><input id="AssignedTo_53101f38-dd2e-458c-b245-0c236cc13d1a_$ClientPeoplePicker_HiddenInput" name="AssignedTo_53101f38-dd2e-458c-b245-0c236cc13d1a_$ClientPeoplePicker_HiddenInput" type="hidden"><div id="AssignedTo_53101f38-dd2e-458c-b245-0c236cc13d1a_$ClientPeoplePicker_AutoFillDiv" class="sp-peoplepicker-autoFillContainer"></div><span id="AssignedTo_53101f38-dd2e-458c-b245-0c236cc13d1a_$ClientPeoplePicker_InitialHelpText" class="sp-peoplepicker-initialHelpText ms-helperText">Введите имена или адреса электронной почты...</span><img class="sp-peoplepicker-waitImg" id="AssignedTo_53101f38-dd2e-458c-b245-0c236cc13d1a_$ClientPeoplePicker_WaitImage" alt="Эта анимация обозначает выполняющуюся операцию. Щелкните, чтобы удалить это анимированное изображение." src="/_layouts/15/images/gears_anv4.gif?rev=23"><span id="AssignedTo_53101f38-dd2e-458c-b245-0c236cc13d1a_$ClientPeoplePicker_ResolvedList" class="sp-peoplepicker-resolveList"></span><input type="text" class="sp-peoplepicker-editorInput" size="1" autocomplete="off" value="" id="AssignedTo_53101f38-dd2e-458c-b245-0c236cc13d1a_$ClientPeoplePicker_EditorInput" title="Кому назначено" autocorrect="off" autocapitalize="off" data-sp-peoplepickereditor="true"></div></div>
+				</td>
+			</tr>
+			<tr>
+				<td nowrap="true" valign="top" width="113px" class="ms-formlabel"><h3 class="ms-standardheader">
+				<nobr>Руководитель проекта<span class="ms-accentText" title="Это поле является обязательным."> *</span></nobr>
+			</h3></td>
+				<td valign="top" width="350px" class="ms-formbody">
+				<!-- FieldName="Руководитель проекта"
+					 FieldInternalName="ProjectManager"
+					 FieldType="SPFieldUser" -->
+					<div dir="none"><div class="sp-peoplepicker-topLevel" id="ProjectManager_ab7b776c-2194-4435-8ab7-79d0cc1eb1a6_$ClientPeoplePicker" title="Руководитель проекта" spclientpeoplepicker="true"><input id="ProjectManager_ab7b776c-2194-4435-8ab7-79d0cc1eb1a6_$ClientPeoplePicker_HiddenInput" name="ProjectManager_ab7b776c-2194-4435-8ab7-79d0cc1eb1a6_$ClientPeoplePicker_HiddenInput" type="hidden"><div id="ProjectManager_ab7b776c-2194-4435-8ab7-79d0cc1eb1a6_$ClientPeoplePicker_AutoFillDiv" class="sp-peoplepicker-autoFillContainer"></div><span id="ProjectManager_ab7b776c-2194-4435-8ab7-79d0cc1eb1a6_$ClientPeoplePicker_InitialHelpText" class="sp-peoplepicker-initialHelpText ms-helperText">Введите имя или адрес электронной почты...</span><img class="sp-peoplepicker-waitImg" id="ProjectManager_ab7b776c-2194-4435-8ab7-79d0cc1eb1a6_$ClientPeoplePicker_WaitImage" alt="Эта анимация обозначает выполняющуюся операцию. Щелкните, чтобы удалить это анимированное изображение." src="/_layouts/15/images/gears_anv4.gif?rev=23"><span id="ProjectManager_ab7b776c-2194-4435-8ab7-79d0cc1eb1a6_$ClientPeoplePicker_ResolvedList" class="sp-peoplepicker-resolveList"></span><input type="text" class="sp-peoplepicker-editorInput" size="1" autocomplete="off" value="" id="ProjectManager_ab7b776c-2194-4435-8ab7-79d0cc1eb1a6_$ClientPeoplePicker_EditorInput" title="Руководитель проекта" autocorrect="off" autocapitalize="off" data-sp-peoplepickereditor="true"></div></div>
+				</td>
+			</tr>
+				<tr>
+				<td nowrap="true" valign="top" width="113px" class="ms-formlabel"><h3 class="ms-standardheader">
+				<nobr>% завершения</nobr>
+			</h3></td>
+				<td valign="top" width="350px" class="ms-formbody">
+				<!-- FieldName="% завершения"
+					 FieldInternalName="PercentComplete"
+					 FieldType="SPFieldNumber" -->
+					<span dir="none"><input type="text" value="0" id="PercentComplete_d2311440-1ed6-46ea-b46d-daa643dc3886_$NumberField" title="% завершения" size="11" class="ms-input" style="ime-mode : inactive">%<br></span>
+				</td>
+			</tr>
+				<tr>
+				<td nowrap="true" valign="top" width="113px" class="ms-formlabel"><h3 class="ms-standardheader">
+				<nobr>Описание</nobr>
+			</h3></td>
+				<td valign="top" width="350px" class="ms-formbody">
+				<!-- FieldName="Описание"
+					 FieldInternalName="Body"
+					 FieldType="SPFieldNote" -->
+					<span dir="none"><div class="ms-rtestate-field ms-rtefield ms-inputBox" id="Body_7662cd2c-f069-4dba-9e35-082cf976e170_$TextField_topDiv"><div id="Body_7662cd2c-f069-4dba-9e35-082cf976e170_$TextField_inplacerte_label" style="display:none">Редактор форматированного текста Описание</div><div class="ms-rtestate-write ms-rteflags-0 ms-rtestate-field" id="Body_7662cd2c-f069-4dba-9e35-082cf976e170_$TextField_inplacerte" style="min-height:84px" aria-labelledby="Body_7662cd2c-f069-4dba-9e35-082cf976e170_$TextField_inplacerte_label" contenteditable="true" role="textbox" aria-autocomplete="both" aria-haspopup="true" aria-multiline="true"><p>​</p></div><div style="clear : both;"></div></div><span dir="ltr"><input type="hidden" id="Body_7662cd2c-f069-4dba-9e35-082cf976e170_$TextField_spSave" value="<p>​</p>"><input type="hidden" name="ms-rtefocuselementid" id="ms-rtefocuselementid" value=""></span></span>
+				</td>
+			</tr>
+				<tr>
+				<td nowrap="true" valign="top" width="113px" class="ms-formlabel"><h3 class="ms-standardheader">
+				<nobr>Предшественники</nobr>
+			</h3></td>
+				<td valign="top" width="350px" class="ms-formbody">
+				<!-- FieldName="Предшественники"
+					 FieldInternalName="Predecessors"
+					 FieldType="SPFieldLookupMulti" -->
+					<span dir="none"><input id="Predecessors_c3a92d97-2b77-4a25-9698-3ab54874bc6f_MultiLookup" type="hidden" value=""><input id="Predecessors_c3a92d97-2b77-4a25-9698-3ab54874bc6f_MultiLookup_data" type="hidden" value="69|tАктуализация Zabbix клиентов на серверах Windows в домене Alpha|t |t |t79|tАктуализация данных в HP SM|t |t |t52|tАктуализация информации по разделенным стендам|t |t |t67|tАктуализация реестра серверов в HP SM и VMWare vCenter|t |t |t62|tАктуализация справочника АС в системе учета ресурсов и АРМ Координатор|t |t |t83|tАктуализация ТТХ серверов в зоне ответственности ОСА СБТ в HP SM по итогам обработки результатов выгрузки из vCenter.|t |t |t68|tАктуализировать поле &quot;Группа сопровождения&quot; на всех стендах, где сейчас указана группа Ю.Крикуна, но по факту (см. поле Администратор) сопровождением занимается смежный отдел УАТС|t |t |t32|tВнести изменения в письма рассылки по кружку качетсва|t |t |t45|tВыгрузка списка из БД SharePoint|t |t |t33|tДобавить лог в базе данных о недоступности vCenter|t |t |t20|tДоработать форму отравки руководителю: заменить &quot;Необходимо дать обратную связь...&quot; на &quot;Вы можете пройти по ссылке...&quot;|t |t |t5|tДоработать формы писем для кружка качества согласло ТЗ|t |t |t28|tДоработать шаблон письма с отправкой отдела исполнителя|t |t |t76|tДоработка отчета SLA координации|t |t |t27|tДоработка формы - оценка &quot;плохо&quot; требовать комментарий|t |t |t18|tЗаблокировать возможность редактирования: 1. Отзывов Инициатором 2. Обратной связи руководителем|t |t |t30|tЗапуск SLA 2016|t |t |t23|tЗапустить в боевую экплуатацию Кружок качества|t |t |t44|tЗапустить в работу серверы HPMA51_12 и HPMA51_13|t |t |t48|tИзменить логику именования таблиц|t |t |t43|tИнтеграция скрипта актуализации данных в HP SM|t |t |t54|tИсключение администраторов ОСА из полей &quot;Администратор&quot; и &quot;Зам администратора&quot; в КЭ ЛС/ИР|t |t |t55|tКонтроль DS проверено, контроль проставления контура в инциденте, |t |t |t66|tНаписание методики|t |t |t73|tНаписать инструкцию по KB|t |t |t71|tНаполнение справочников|t |t |t37|tНастроить публикацию медиа контента на портале|t |t |t8|tНастроить резервное копирование БД SharePoint, АРМ на внешний сервер|t |t |t46|tНастройка отчета по МСО|t |t |t26|tОповещение координаторов, если на руководство назначена заявка|t |t |t10|tОповещение о крайнем сроке СЛА исполнителей. |t |t |t11|tОповещение о крайнем сроке СЛА исполнителей.|t |t |t9|tОповещение о крайнем сроке СЛА исполнителей. Проработать формы письма|t |t |t50|tОтчет по заявкам ПИР|t |t |t34|tПереписать инструменты сбора метрик на джаве|t |t |t21|tПодготовить презентацию функионала к оперативке УАТС|t |t |t51|tПодготовить шаблон документа тех дизайн портала|t |t |t29|tПодготовка технической документации|t |t |t80|tПодготовка шаблонов windows для openstack|t |t |t90|tПодключение к «системе установки обновлений по расписанию» серверов всех заинтересованных лиц. |t |t |t19|tПодсвечивать красным все отзывы, по котором нет обратной связи руководителя|t |t |t24|tПолучить со всех руководителей списки ответственных/руководителей за обратную связь|t |t |t35|tПредложить вариант общего списка для Ненайденко|t |t |t53|tПроведение аудита принятых серверов на соответствие требований|t |t |t60|tПровести анализ архитектуры портала SharePoint sbt-dk|t |t |t22|tПровести встречу на 15 минут с руководителями УАТС. Показать функционал|t |t |t31|tПровести обслуживание портала SharePoint SBT-DK|t |t |t40|tРазвернуть тестовый SharePoint|t |t |t72|tРазработать главную страницу сайта|t |t |t56|tРазработка концепции системы обновления|t |t |t61|tРазработка системы отражения изменений в HP SM в рамках разделения полномочий прав на тестовых стендах УАТС СБТ|t |t |t57|tРазработка тех. решения, написание скрипта установки обновлений|t |t |t70|tРазработка шаблона статьи базы знаний|t |t |t47|tРассылка повторных сообщений по не назначенным инцидентам|t |t |t58|tРасчет SLA координатора|t |t |t17|tРасшивка ЗНИ по ИР в части ПО|t |t |t15|tРасшивка старых ЗНИ (сколько запрошено/выдано по новой форме)|t |t |t4|tСверка за день «кол-во закрытых заявок / кол-во отправленных сообщений / кол-во полученных сообщений»|t |t |t25|tСделать представление со всеми неназначенными инцидентами на исполниетелей. Подсветить их красным.|t |t |t41|tСинхронизация лога согласования по ЗНИ|t |t |t42|tСинхронизация новых групп в АРМ|t |t |t74|tСобрать и документировать имеющиеся наработки скриптов PowerShell|t |t |t65|tСоздание автоматизированного аналитического отчета об актуальности состояния КЭ в CMDB HPSM|t |t |t92|tСоздание аналитики по сотрудникам ОСА|t |t |t81|tСоздание информационно-вспомогательного портала для, в задачи которого входит: знакомство с ресурсно-сервисной моделью, типы и правила обращения в ОСА, помощь в создании и примеры обращений, ответы на частые вопросы, ссылки на правила и документацию.|t |t |t91|tСоздание системы автоматической проверки сетевых ресурсов размещенных на ОС Windows  на наличие зарегистрированных ИР ФАЙЛ		|t |t |t16|tСоздание формы для возможности расшивки старых ЗНИ по оптимизации|t |t |t59|tСоздать документацию по развертыванию ВМ Windows|t |t |t36|tСоздать Оповещения на почту при назначении задачи|t |t |t38|tСоздать прототип узла сервисов УАТС|t |t |t78|tСоставление методики миграции серверов (уже полученных по 236-Р) на нашу инфраструктуру|t |t |t64|tТСУ и СРМ ИТ в HP SM. 4 этап|t |t |t6|tУтвердить разработанную схему работы Кружка качества|t |t |t13|tУчет выдачи ресурсов на этапе поступления ЗНИ|t |t |t49|tУчет заявок ПИР в системе АРМ|t |t |t14|tУчет ресурсов процесса оптимизации по утилизации|t |t "><input id="Predecessors_c3a92d97-2b77-4a25-9698-3ab54874bc6f_MultiLookup_initial" type="hidden" value=""><table id="Predecessors_c3a92d97-2b77-4a25-9698-3ab54874bc6f_MultiLookup_topTable" class="ms-long" cellpadding="0" cellspacing="0" border="0"><tbody><tr><td class="ms-input"><select id="Predecessors_c3a92d97-2b77-4a25-9698-3ab54874bc6f_SelectCandidate" multiple="multiple" title="Возможных значений: Предшественники" style="width:143px; height:125px; overflow:scroll;"><option value="69" title="Актуализация Zabbix клиентов на серверах Windows в домене Alpha">Актуализация Zabbix клиентов на серверах Windows в домене Alpha</option><option value="79" title="Актуализация данных в HP SM">Актуализация данных в HP SM</option><option value="52" title="Актуализация информации по разделенным стендам">Актуализация информации по разделенным стендам</option><option value="67" title="Актуализация реестра серверов в HP SM и VMWare vCenter">Актуализация реестра серверов в HP SM и VMWare vCenter</option><option value="62" title="Актуализация справочника АС в системе учета ресурсов и АРМ Координатор">Актуализация справочника АС в системе учета ресурсов и АРМ Координатор</option><option value="83" title="Актуализация ТТХ серверов в зоне ответственности ОСА СБТ в HP SM по итогам обработки результатов выгрузки из vCenter.">Актуализация ТТХ серверов в зоне ответственности ОСА СБТ в HP SM по итогам обработки результатов выгрузки из vCenter.</option><option value="68" title="Актуализировать поле &quot;Группа сопровождения&quot; на всех стендах, где сейчас указана группа Ю.Крикуна, но по факту (см. поле Администратор) сопровождением занимается смежный отдел УАТС">Актуализировать поле "Группа сопровождения" на всех стендах, где сейчас указана группа Ю.Крикуна, но по факту (см. поле Администратор) сопровождением занимается смежный отдел УАТС</option><option value="32" title="Внести изменения в письма рассылки по кружку качетсва">Внести изменения в письма рассылки по кружку качетсва</option><option value="45" title="Выгрузка списка из БД SharePoint">Выгрузка списка из БД SharePoint</option><option value="33" title="Добавить лог в базе данных о недоступности vCenter">Добавить лог в базе данных о недоступности vCenter</option><option value="20" title="Доработать форму отравки руководителю: заменить &quot;Необходимо дать обратную связь...&quot; на &quot;Вы можете пройти по ссылке...&quot;">Доработать форму отравки руководителю: заменить "Необходимо дать обратную связь..." на "Вы можете пройти по ссылке..."</option><option value="5" title="Доработать формы писем для кружка качества согласло ТЗ">Доработать формы писем для кружка качества согласло ТЗ</option><option value="28" title="Доработать шаблон письма с отправкой отдела исполнителя">Доработать шаблон письма с отправкой отдела исполнителя</option><option value="76" title="Доработка отчета SLA координации">Доработка отчета SLA координации</option><option value="27" title="Доработка формы - оценка &quot;плохо&quot; требовать комментарий">Доработка формы - оценка "плохо" требовать комментарий</option><option value="18" title="Заблокировать возможность редактирования: 1. Отзывов Инициатором 2. Обратной связи руководителем">Заблокировать возможность редактирования: 1. Отзывов Инициатором 2. Обратной связи руководителем</option><option value="30" title="Запуск SLA 2016">Запуск SLA 2016</option><option value="23" title="Запустить в боевую экплуатацию Кружок качества">Запустить в боевую экплуатацию Кружок качества</option><option value="44" title="Запустить в работу серверы HPMA51_12 и HPMA51_13">Запустить в работу серверы HPMA51_12 и HPMA51_13</option><option value="48" title="Изменить логику именования таблиц">Изменить логику именования таблиц</option><option value="43" title="Интеграция скрипта актуализации данных в HP SM">Интеграция скрипта актуализации данных в HP SM</option><option value="54" title="Исключение администраторов ОСА из полей &quot;Администратор&quot; и &quot;Зам администратора&quot; в КЭ ЛС/ИР">Исключение администраторов ОСА из полей "Администратор" и "Зам администратора" в КЭ ЛС/ИР</option><option value="55" title="Контроль DS проверено, контроль проставления контура в инциденте, ">Контроль DS проверено, контроль проставления контура в инциденте, </option><option value="66" title="Написание методики">Написание методики</option><option value="73" title="Написать инструкцию по KB">Написать инструкцию по KB</option><option value="71" title="Наполнение справочников">Наполнение справочников</option><option value="37" title="Настроить публикацию медиа контента на портале">Настроить публикацию медиа контента на портале</option><option value="8" title="Настроить резервное копирование БД SharePoint, АРМ на внешний сервер">Настроить резервное копирование БД SharePoint, АРМ на внешний сервер</option><option value="46" title="Настройка отчета по МСО">Настройка отчета по МСО</option><option value="26" title="Оповещение координаторов, если на руководство назначена заявка">Оповещение координаторов, если на руководство назначена заявка</option><option value="10" title="Оповещение о крайнем сроке СЛА исполнителей. ">Оповещение о крайнем сроке СЛА исполнителей. </option><option value="11" title="Оповещение о крайнем сроке СЛА исполнителей.">Оповещение о крайнем сроке СЛА исполнителей.</option><option value="9" title="Оповещение о крайнем сроке СЛА исполнителей. Проработать формы письма">Оповещение о крайнем сроке СЛА исполнителей. Проработать формы письма</option><option value="50" title="Отчет по заявкам ПИР">Отчет по заявкам ПИР</option><option value="34" title="Переписать инструменты сбора метрик на джаве">Переписать инструменты сбора метрик на джаве</option><option value="21" title="Подготовить презентацию функионала к оперативке УАТС">Подготовить презентацию функионала к оперативке УАТС</option><option value="51" title="Подготовить шаблон документа тех дизайн портала">Подготовить шаблон документа тех дизайн портала</option><option value="29" title="Подготовка технической документации">Подготовка технической документации</option><option value="80" title="Подготовка шаблонов windows для openstack">Подготовка шаблонов windows для openstack</option><option value="90" title="Подключение к «системе установки обновлений по расписанию» серверов всех заинтересованных лиц. ">Подключение к «системе установки обновлений по расписанию» серверов всех заинтересованных лиц. </option><option value="19" title="Подсвечивать красным все отзывы, по котором нет обратной связи руководителя">Подсвечивать красным все отзывы, по котором нет обратной связи руководителя</option><option value="24" title="Получить со всех руководителей списки ответственных/руководителей за обратную связь">Получить со всех руководителей списки ответственных/руководителей за обратную связь</option><option value="35" title="Предложить вариант общего списка для Ненайденко">Предложить вариант общего списка для Ненайденко</option><option value="53" title="Проведение аудита принятых серверов на соответствие требований">Проведение аудита принятых серверов на соответствие требований</option><option value="60" title="Провести анализ архитектуры портала SharePoint sbt-dk">Провести анализ архитектуры портала SharePoint sbt-dk</option><option value="22" title="Провести встречу на 15 минут с руководителями УАТС. Показать функционал">Провести встречу на 15 минут с руководителями УАТС. Показать функционал</option><option value="31" title="Провести обслуживание портала SharePoint SBT-DK">Провести обслуживание портала SharePoint SBT-DK</option><option value="40" title="Развернуть тестовый SharePoint">Развернуть тестовый SharePoint</option><option value="72" title="Разработать главную страницу сайта">Разработать главную страницу сайта</option><option value="56" title="Разработка концепции системы обновления">Разработка концепции системы обновления</option><option value="61" title="Разработка системы отражения изменений в HP SM в рамках разделения полномочий прав на тестовых стендах УАТС СБТ">Разработка системы отражения изменений в HP SM в рамках разделения полномочий прав на тестовых стендах УАТС СБТ</option><option value="57" title="Разработка тех. решения, написание скрипта установки обновлений">Разработка тех. решения, написание скрипта установки обновлений</option><option value="70" title="Разработка шаблона статьи базы знаний">Разработка шаблона статьи базы знаний</option><option value="47" title="Рассылка повторных сообщений по не назначенным инцидентам">Рассылка повторных сообщений по не назначенным инцидентам</option><option value="58" title="Расчет SLA координатора">Расчет SLA координатора</option><option value="17" title="Расшивка ЗНИ по ИР в части ПО">Расшивка ЗНИ по ИР в части ПО</option><option value="15" title="Расшивка старых ЗНИ (сколько запрошено/выдано по новой форме)">Расшивка старых ЗНИ (сколько запрошено/выдано по новой форме)</option><option value="4" title="Сверка за день «кол-во закрытых заявок / кол-во отправленных сообщений / кол-во полученных сообщений»">Сверка за день «кол-во закрытых заявок / кол-во отправленных сообщений / кол-во полученных сообщений»</option><option value="25" title="Сделать представление со всеми неназначенными инцидентами на исполниетелей. Подсветить их красным.">Сделать представление со всеми неназначенными инцидентами на исполниетелей. Подсветить их красным.</option><option value="41" title="Синхронизация лога согласования по ЗНИ">Синхронизация лога согласования по ЗНИ</option><option value="42" title="Синхронизация новых групп в АРМ">Синхронизация новых групп в АРМ</option><option value="74" title="Собрать и документировать имеющиеся наработки скриптов PowerShell">Собрать и документировать имеющиеся наработки скриптов PowerShell</option><option value="65" title="Создание автоматизированного аналитического отчета об актуальности состояния КЭ в CMDB HPSM">Создание автоматизированного аналитического отчета об актуальности состояния КЭ в CMDB HPSM</option><option value="92" title="Создание аналитики по сотрудникам ОСА">Создание аналитики по сотрудникам ОСА</option><option value="81" title="Создание информационно-вспомогательного портала для, в задачи которого входит: знакомство с ресурсно-сервисной моделью, типы и правила обращения в ОСА, помощь в создании и примеры обращений, ответы на частые вопросы, ссылки на правила и документацию.">Создание информационно-вспомогательного портала для, в задачи которого входит: знакомство с ресурсно-сервисной моделью, типы и правила обращения в ОСА, помощь в создании и примеры обращений, ответы на частые вопросы, ссылки на правила и документацию.</option><option value="91" title="Создание системы автоматической проверки сетевых ресурсов размещенных на ОС Windows  на наличие зарегистрированных ИР ФАЙЛ		">Создание системы автоматической проверки сетевых ресурсов размещенных на ОС Windows  на наличие зарегистрированных ИР ФАЙЛ		</option><option value="16" title="Создание формы для возможности расшивки старых ЗНИ по оптимизации">Создание формы для возможности расшивки старых ЗНИ по оптимизации</option><option value="59" title="Создать документацию по развертыванию ВМ Windows">Создать документацию по развертыванию ВМ Windows</option><option value="36" title="Создать Оповещения на почту при назначении задачи">Создать Оповещения на почту при назначении задачи</option><option value="38" title="Создать прототип узла сервисов УАТС">Создать прототип узла сервисов УАТС</option><option value="78" title="Составление методики миграции серверов (уже полученных по 236-Р) на нашу инфраструктуру">Составление методики миграции серверов (уже полученных по 236-Р) на нашу инфраструктуру</option><option value="64" title="ТСУ и СРМ ИТ в HP SM. 4 этап">ТСУ и СРМ ИТ в HP SM. 4 этап</option><option value="6" title="Утвердить разработанную схему работы Кружка качества">Утвердить разработанную схему работы Кружка качества</option><option value="13" title="Учет выдачи ресурсов на этапе поступления ЗНИ">Учет выдачи ресурсов на этапе поступления ЗНИ</option><option value="49" title="Учет заявок ПИР в системе АРМ">Учет заявок ПИР в системе АРМ</option><option value="14" title="Учет ресурсов процесса оптимизации по утилизации">Учет ресурсов процесса оптимизации по утилизации</option></select></td><td style="padding-left:10px"></td><td align="center" valign="middle" class="ms-input ms-noWrap"><input type="button" id="Predecessors_c3a92d97-2b77-4a25-9698-3ab54874bc6f_AddButton" class="ms-ButtonHeightWidth" value="Добавить >"><br><br><input type="button" id="Predecessors_c3a92d97-2b77-4a25-9698-3ab54874bc6f_RemoveButton" class="ms-ButtonHeightWidth" value="< Удалить" disabled=""></td><td style="padding-left:10px"></td><td class="ms-input"><select id="Predecessors_c3a92d97-2b77-4a25-9698-3ab54874bc6f_SelectResult" multiple="multiple" title="Выбранных значений: Предшественники" style="width:143px;height:125px;overflow:scroll;"></select></td></tr></tbody></table></span>
+				</td>
+			</tr>
+			<tr>
+				<td nowrap="true" valign="top" width="113px" class="ms-formlabel"><h3 class="ms-standardheader">
+				<nobr>Важность</nobr>
+			</h3></td>
+				<td valign="top" width="350px" class="ms-formbody">
+				<!-- FieldName="Важность"
+					 FieldInternalName="Priority"
+					 FieldType="SPFieldChoice" -->
+					<span dir="none"><select id="Priority_a8eb573e-9e11-481a-a8c9-1104a54b2fbd_$DropDownChoice" title="Важность" class="ms-RadioText"><option value="(1) Высокая">(1) Высокая</option><option value="(2) Обычная" selected="selected">(2) Обычная</option><option value="(3) Низкая">(3) Низкая</option></select><br></span>
+				</td>
+			</tr>
+			<tr>
+				<td nowrap="true" valign="top" width="113px" class="ms-formlabel"><h3 class="ms-standardheader">
+				<nobr>Состояние задачи</nobr>
+			</h3></td>
+				<td valign="top" width="350px" class="ms-formbody">
+				<!-- FieldName="Состояние задачи"
+					 FieldInternalName="Status"
+					 FieldType="SPFieldChoice" -->
+					<span dir="none"><select id="Status_c15b34c3-ce7d-490a-b133-3f4de8801b76_$DropDownChoice" title="Состояние задачи" class="ms-RadioText"><option value="Не начата" selected="selected">Не начата</option><option value="В процессе выполнения">В процессе выполнения</option><option value="Завершена">Завершена</option><option value="Отложенные">Отложенные</option><option value="Ожидание другого пользователя">Ожидание другого пользователя</option></select><br></span>
+				</td>
+			</tr>
+			<tr>
+				<td nowrap="true" valign="top" width="113px" class="ms-formlabel"><h3 class="ms-standardheader">
+				<nobr>Проект<span class="ms-accentText" title="Это поле является обязательным."> *</span></nobr>
+				</h3></td>
+					<td valign="top" width="350px" class="ms-formbody">
+					<!-- FieldName="Проект"
+						 FieldInternalName="ProjectName"
+						 FieldType="SPFieldLookup" -->
+						<span dir="none"><select id="ProjectName_44c257f7-c775-4543-9d15-2fab99e042b6_$LookupField" title="Проект Обязательное поле"><option value="5">VMREPORT</option><option value="17">Актуализация информации HP SM, УСР, VMWare</option><option value="2">АРМ Координатор</option><option value="20">Аудит разработанных скриптов</option><option value="22">База знаний ОСА УАТС ДК</option><option value="24">Информационно-вспомогательный портал ОСА (FAQ)</option><option value="10">Инфраструктура виртуализации x86</option><option value="1">Кружок качества / МСО </option><option value="16">Мониторинг Zabbix</option><option value="8">Обучение инженера SharePoint</option><option value="19">Отчетность ОСА</option><option value="4">Поручения руководителя</option><option value="13">Приём на администрирование серверов "Распоряжение 236-Р"</option><option value="12">Разделение полномочий УАТС на стендах</option><option value="11">Разработка технического дизайна портала SharePoint</option><option value="18">Установка обновлений на ОС Windows (в тех. окнах)</option><option value="3">Учет КТС в резервном пуле</option><option value="14">Шаблоны VM Windows</option></select><br></span>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+						<table cellpadding="0" cellspacing="0" width="100%" style="padding-top: 7px"><tbody><tr><td width="100%">
+				<input name="ctl00$ctl33$g_f5cd4946_a41d_4764_9294_92cdb7b8486e$ctl00$ctl17$ctl00$owshiddenversion" type="HIDDEN" id="ctl00_ctl33_g_f5cd4946_a41d_4764_9294_92cdb7b8486e_ctl00_ctl17_ctl00_owshiddenversion">				
+				<table class="ms-formtoolbar" cellpadding="2" cellspacing="0" border="0" id="ctl00_ctl33_g_f5cd4946_a41d_4764_9294_92cdb7b8486e_ctl00_toolBarTbl" width="100%">
+				<tbody><tr>
+					<td class="ms-toolbar" nowrap="nowrap">
+					</td>
+					<td width="99%" class="ms-toolbar" nowrap="nowrap"><img src="/_layouts/15/images/blank.gif?rev=23" width="1" height="18" alt=""></td>
+					<td class="ms-toolbar" nowrap="nowrap">
+					<table cellpadding="0" cellspacing="0" width="100%"><tbody><tr><td align="right" width="100%" nowrap="nowrap">
+						<input type="button" name="ctl00$ctl33$g_f5cd4946_a41d_4764_9294_92cdb7b8486e$ctl00$toolBarTbl$RightRptControls$ctl00$ctl00$diidIOSaveItem" value="Сохранить" onclick="if (!PreSaveItem()) return false;if (SPClientForms.ClientFormManager.SubmitClientForm('WPQ2')) return false;WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$ctl33$g_f5cd4946_a41d_4764_9294_92cdb7b8486e$ctl00$toolBarTbl$RightRptControls$ctl00$ctl00$diidIOSaveItem&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, true))" id="ctl00_ctl33_g_f5cd4946_a41d_4764_9294_92cdb7b8486e_ctl00_toolBarTbl_RightRptControls_ctl00_ctl00_diidIOSaveItem" accesskey="O" class="ms-ButtonHeightWidth" target="_self">
+				</td> </tr> </tbody></table>
+				</td>
+				<td class="ms-separator">&nbsp;</td>
+				<td class="ms-toolbar" nowrap="nowrap">
+				<table cellpadding="0" cellspacing="0" width="100%"><tbody><tr><td align="right" width="100%" nowrap="nowrap">
+					<input type="button" name="cancelSaveNewTask" value="Отмена" onclick="" id="" class="ms-ButtonHeightWidth" target="">
+				</td> 
+			</tr> </tbody></table>
+		</td>
+  </tr>
+</tbody></table></td></tr></tbody></table>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+	
+
 	<div id="newTaskDiv">
 		<input id="newTaskTitle" class="newTask" type="text" maxlength="50" />
 		<input type="button" class="newTask" id="addTaskButton" value="Add New Task" />
-	</div> 
+	</div>
+	<div id="taskManager">
+		<div id="peoplePickerDiv"></div>
+	</div>
+	<div id="taskExecutor"></div>
+	<div id="taskProject"></div>
+	<div id="taskDate"></div>
+	<div id="taskDescription"></div>
+    <div>
+        <br/>
+        <input id="getUserBut" type="button" value="Get User Info"></input>
+        <br/>
+        <h1>User info:</h1>
+        <p id="resolvedUsers"></p>
+        <h1>User keys:</h1>
+        <p id="userKeys"></p> 
+        <h1>User ID:</h1>
+        <p id="userId"></p>
+    </div>
 	<!-- Task Content -->
 	<div id="taskContent">
 		<!-- Not Started Tasks -->
