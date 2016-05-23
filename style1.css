@@ -5,11 +5,22 @@
 .taskTitle {
 	font-weight: bold;
 }
-.taskDiv ul {
+.taskDiv > ul:first-child {
 	list-style: none;
 	margin: 0px;
 	padding: 4px;
 	min-height: 100px;
+}
+.taskDiv > ul > li {
+	font-size: 90%;
+	display: block;
+	padding: 0.4em 0 0.4em 0.5em;
+	text-decoration: none;
+}
+.taskDiv ul {
+	list-style: none;
+	margin: 0px;
+	padding: 4px;
 }
 .taskDiv li {
 	font-size: 90%;
@@ -17,33 +28,33 @@
 	padding: 0.4em 0 0.4em 0.5em;
 	text-decoration: none;
 }
-#notStartedTasksDiv li {
+#notStartedTasksDiv > ul > li {
 	border-left: 12px solid #71af0e;
 	border-right: 3px solid #71af0e;
 	background-color: #e9f9d0;
 	border-bottom: 1px solid #71af0e;
 }
-#notStartedTasksDiv li:hover {
+#notStartedTasksDiv > ul > li:hover {
 	background-color: #71af0e;
 	color: white;
 }
-#inProgressTasksDiv li {
+#inProgressTasksDiv > ul > li {
 	border-left: 12px solid #efb600;
 	border-right: 3px solid #efb600;
 	background-color: #f1efae;
 	border-bottom: 1px solid #efb600;
 }
-#inProgressTasksDiv li:hover {
+#inProgressTasksDiv > ul > li:hover {
 	background-color: #efb600;
 	color: white;
 }
-#completedTasksDiv li {
+#completedTasksDiv > ul > li {
 	border-left: 12px solid #ef0b00;
 	border-right: 3px solid #ef0b00;
 	background-color: #f3c8c6;
 	border-bottom: 1px solid #ef0b00;
 }
-#completedTasksDiv li:hover {
+#completedTasksDiv > ul > li:hover {
 	background-color: #ef0b00;
 	color: white;
 }
@@ -101,27 +112,34 @@
 	width: 350px;
 }
 .newTask {
-	border: 3px solid #cccccc;
-	padding: 5px;
-	background-color: white;
+	
 }
-#addTaskButton:hover {
-	border: 3px solid #ff1943;
+#addTaskButton {
 	cursor: pointer;
-}
-#newTaskDiv {
-	padding: 5px;
-}
-#newTaskTitle {
-	width: 350px;
-}
-.newTask {
-	border: 3px solid #cccccc;
-	padding: 5px;
-	background-color: white;
+	display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+	color: #fff;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
 }
 #addTaskButton:hover {
-	border: 3px solid #ff1943;
 	cursor: pointer;
 }
 .edit {
@@ -153,4 +171,40 @@
 }
 .editTaskCancelButton:hover {
 	background: palevioletred;
+}
+#filtersDiv > button {
+	display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+	color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
+
+#filtersDiv > button:hover{
+	color: #333;
+    background-color: #e6e6e6;
+    border-color: #adadad;
+}
+
+#filtersDiv > button.active{
+	color: #fff;
+    background-color: #337ab7;
+    border-color: #adadad;
 }

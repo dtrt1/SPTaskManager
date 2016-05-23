@@ -2,7 +2,31 @@
 	ExecuteOrDelayUntilScriptLoaded(taskManager, 'sp.js');
 });
 function taskManager() {
-	initializePeoplePicker('peoplePickerDiv');
+	$('#filtersDiv > button').click(function(){
+		$(this).toggleClass('active');
+	});
+	$.ajax({
+		url: "/OSA/_api/web/lists/getbytitle('Список проектов')/items?$select=Title,ID",
+		method: "GET",
+		headers: {
+			"accept": "application/json;odata=verbose"
+		},
+	}).success(function(data) {
+		console.log(data);
+		var selectProjectBody;
+		
+		for (var i in data.d.results){
+			var projectId = data.d.results[i].ID;
+			var projectTitle = data.d.results[i].Title;
+			
+			selectProjectBody+= '<option value="'+ projectId +'">' + projectTitle + '</option>'
+		}
+		$('#ProjectName').append(selectProjectBody);
+	});
+	
+	var divID1 = 'peoplePickerDivExecutor',divID2 = 'peoplePickerDivManager';
+	initializePeoplePicker(divID1);
+	initializePeoplePicker(divID2);
 	
 	function initializePeoplePicker(peoplePickerElementId) {
 
@@ -13,59 +37,45 @@ function taskManager() {
 		schema['ResolvePrincipalSource'] = 15;
 		schema['AllowMultipleValues'] = true;
 		schema['MaximumEntitySuggestions'] = 50;
-		schema['Width'] = '280px';
+		schema['Width'] = '350px';
 
 		// Render and initialize the picker. 
 		// Pass the ID of the DOM element that contains the picker, an array of initial
 		// PickerEntity objects to set the picker value, and a schema that defines
 		// picker properties.
-		this.SPClientPeoplePicker_InitStandaloneControlWrapper(peoplePickerElementId, null, schema);
+		SPClientPeoplePicker_InitStandaloneControlWrapper(peoplePickerElementId, null, schema);
 	}
 
 	// Query the picker for user information.
-	$('#getUserBut').on('click', getUserInfo);
-	function getUserInfo() {
-
+	$('#getUserBut').on('click', function(){
+		getUserInfo(divID1);
+		getUserInfo(divID2);
+	})
+	function getUserInfo(divID) {
 		// Get the people picker object from the page.
-		var peoplePicker = SPClientPeoplePicker.SPClientPeoplePickerDict.peoplePickerDiv_TopSpan;
-
+		var peoplePicker = SPClientPeoplePicker.SPClientPeoplePickerDict[divID+'_TopSpan'];
 		// Get information about all users.
 		var users = peoplePicker.GetAllUserInfo();
-		var userInfo = '';
 		for (var i = 0; i < users.length; i++) {
-			var user = users[i];
-			for (var userProperty in user) { 
-				userInfo += userProperty + ':  ' + user[userProperty] + '<br>';
+			getUserId(users[i].Key, divID);
 			}
-		}
-		$('#resolvedUsers').html(userInfo);
-
-		// Get user keys.
-		var keys = peoplePicker.GetAllUserKeys();
-		$('#userKeys').html(keys);
-
-		// Get the first user's ID by using the login name.
-		getUserId(users[0].Key);
 	}
 
 	// Get the user ID.
-	function getUserId(loginName) {
+	function getUserId(loginName, divID) {
 		var context = new SP.ClientContext.get_current();
-		this.user = context.get_web().ensureUser(loginName);
-		context.load(this.user);
+		var user = context.get_web().ensureUser(loginName);
+		context.load(user);
 		context.executeQueryAsync(
-			 Function.createDelegate(null, ensureUserSuccess), 
-			 Function.createDelegate(null, onFail)
+			 function(){
+				 $('#userId').append(divID + ' этот юзер имеет ID: ' + user.get_id());
+			 }, 
+			 function(sender, args) {
+				console.log('Query failed. Error: ' + args.get_message());
+			 }
 		);
 	}
 
-	function ensureUserSuccess() {
-		$('#userId').html(this.user.get_id());
-	}
-
-	function onFail(sender, args) {
-		alert('Query failed. Error: ' + args.get_message());
-	}
 	
 	$.ajax({
 		url: "/OSA/_api/web/lists/GetByTitle('Задачи сотрудников')/Items",
@@ -79,7 +89,7 @@ function taskManager() {
 			var taskId = data.d.results[i].ID;
 			var taskTitle = data.d.results[i].Title;
 			var taskStatus = data.d.results[i].Status;
-			var taskBody = '<li data-id="'+taskId+'" data-status="'+taskStatus+'">' +
+			var taskBody = '<li class="taskLi" data-id="'+taskId+'" data-status="'+taskStatus+'">' +
 								'<div class="deleteDiv">' +
 									'<span class="deleteButton delete">x</span>' +
 									'<span class="confirmDelete" style="display: none">' +
@@ -89,7 +99,10 @@ function taskManager() {
 									'</span>' +
 								'</div>' +
 								'<p class="taskTitle">'+taskTitle+'</p>' +
-								'<div class="taskDetailDiv" data-id="'+taskId+'" data-status="'+taskStatus+'"></div>' +
+								'<div class="taskDetailDiv" data-id="'+taskId+'" data-status="'+taskStatus+'">' +
+									'<div class="taskDescriptionDiv" data-id="'+taskId+'" data-status="'+taskStatus+'"></div>' +
+									'<div class="taskSubtaskDiv" data-id="'+taskId+'" data-status="'+taskStatus+'"></div>' +
+								'</div>' +
 							'</li>';
 			switch (taskStatus){
 				case "Не начата" : 
@@ -107,13 +120,15 @@ function taskManager() {
 	$('#taskContent').delegate('p.taskTitle','click',function(e){
 		var currentItem = $(e.target.nextSibling);
 		if (currentItem.siblings('div.editDiv').length){
-			if (currentItem.find('div.editDiv').is(':visible')){
+			if (currentItem.siblings('div.editDiv').is(':visible')){
+				currentItem.hide()
 				return;
 			}
 		}
-		if(currentItem.is(":visible"))
+		if(currentItem.is(":visible")){
 			currentItem.hide();
-		else{
+		} else{
+			currentItem.show();
 			var guid = currentItem.attr('data-id');
 			$.ajax({
 				url: "/OSA/_api/web/lists/GetByTitle('Задачи сотрудников')/Items("+guid+")",
@@ -122,21 +137,52 @@ function taskManager() {
 				"accept": "application/json;odata=verbose"
 				},
 			}).success(function(item){
-				currentItem.html(item.d.Body);
-				var taskButton = '<div class="moveButtonsDiv">' +
-									'<img class="moveLeftButton moveButton" src="/_layouts/images/ARRLEFTA.GIF" alt="Move Left" />' +
-									'<img class="moveRightButton moveButton" src="/_layouts/images/ARRRIGHTA.GIF" alt="Move Right" />' +
-								'</div>';
-				currentItem.append(taskButton).show();
-				switch (item.d.Status) {
-					case "Не начата": currentItem.find('.moveLeftButton').hide();
-						break;
-					case "Завершена": currentItem.find('.moveRightButton').hide();
-						break;
+				currentItem.children('div.taskDescriptionDiv').html(item.d.Body);
+				currentItem.children('div.taskSubtaskDiv').html(readSubTasks(item.d.subTasks,guid));
+				if (!currentItem.children('div.moveButtonsDiv').length){
+					var taskButton = '<div class="moveButtonsDiv">' +
+										'<img class="moveLeftButton moveButton" src="/_layouts/images/ARRLEFTA.GIF" alt="Move Left" />' +
+										'<img class="moveRightButton moveButton" src="/_layouts/images/ARRRIGHTA.GIF" alt="Move Right" />' +
+									'</div>';
+					currentItem.append(taskButton).show();
+					switch (item.d.Status) {
+						case "Не начата": currentItem.find('.moveLeftButton').hide();
+							break;
+						case "Завершена": currentItem.find('.moveRightButton').hide();
+							break;
+					}
 				}
 			});
 		}	
 	});
+	function readSubTasks(str,taskId) {
+		var checkValid = false;
+		try {
+			var parsedStr = jQuery.parseJSON(str);
+			if (parsedStr != undefined && parsedStr != null && typeof(parsedStr) == 'object') {
+				checkValid = true;
+			} else {
+				checkValid = false;
+			}
+		} catch (e) {
+			checkValid = false;
+		}
+		var returnStr = '<ul>';
+		console.log('parset subTasks: '+parsedStr);
+		currentOpenSubtasks.push({taskId: taskId, subTasks: parsedStr});
+		console.log(currentOpenSubtasks);
+		if (checkValid) {
+			parsedStr = parsedStr.subTasks;
+			for (var i in parsedStr) {
+				var j = parseInt(i) + 1;
+				returnStr += '<li' + (parsedStr[i].Status ? ' style="text-decoration: line-through"' : '') + '>' + j + '.' + parsedStr[i].Title + '</li>';
+			}
+		} else {
+			returnStr += '<li>No subtasks</li>';
+		}
+		return returnStr + '</ul>';
+	}
+
 	$('#taskContent').delegate('.moveButton','click',function(e){
 		var $currentItem = $(e.target);
 		var taskStatus = $currentItem.closest('div[class^="taskDetailDiv"]').data('status');
@@ -166,7 +212,7 @@ function taskManager() {
 			},
 			data: JSON.stringify({
 				'__metadata': {
-					'type': 'SP.Data.ProjectTasksListItem'
+					'type': 'SP.Data.ListListItem'
 				},
 				'Status': taskStatus
 		}),
@@ -200,8 +246,8 @@ function taskManager() {
 		var TasksItemElement = $(taskElement).parents('li:first');
 		var taskId = TasksItemElement.data('id');
 		$.ajax({
-			url: "/OSA/_api/web/lists/GetByTitle('Задачи сотрудников')/Items("+taskId+")",
-			method: "DELETE",
+			url: "/OSA/_api/web/lists/GetByTitle('Задачи сотрудников')/Items("+taskId+")/recycle()",
+			method: "POST",
 			headers: {
 				"accept": "application/json;odata=verbose",
 				"X-RequestDigest": $("#__REQUESTDIGEST").val(),
@@ -214,7 +260,14 @@ function taskManager() {
 			alert('Request failed. ' + error.get_message() + '\n' + error.get_stackTrace()); 
 		});
 	}
+	var clickedAddTaskButton = false;
 	$('#addTaskButton').click(function () {
+		$('#newTaskContent').slideToggle('500', 'swing');
+		$('.sp-peoplepicker-initialHelpText').html('Введите имя или адрес электронной почты...');
+		$(this).val(clickedAddTaskButton? "Создать новую задачу": "Скрыть");
+		clickedAddTaskButton = !clickedAddTaskButton;
+	});
+	/* $('#addTaskButton').click(function () {
 		var title = $('#newTaskTitle').val();
 		if (title == '') {
 			alert('Please enter a value');
@@ -222,7 +275,7 @@ function taskManager() {
 		} else {
 			AddNewTask(title);
 		}
-	});
+	}); */
 	$("#newTaskTitle").keydown(function (e) {
 		switch (e.keyCode) {
 			// Handle the Enter button to call button click
@@ -237,9 +290,9 @@ function taskManager() {
 				break;
 		}
 	});
-	function AddNewTask(Title){
+	function AddNewTask(Title,Manager,Project,Deadline,Description){
 			var data = {
-				__metadata: { 'type': 'SP.Data.ProjectTasksListItem'},
+				__metadata: { 'type': 'SP.Data.ListListItem'},
 				Title: Title,
 				StartDate: new Date().toISOString()
 			};
@@ -285,7 +338,7 @@ function taskManager() {
 	$('#taskContent').delegate('.yesDeleteButton','click',function(){
 		deleteTask(this);
 	});
-	$('#taskContent').delegate('li','dblclick',function(){
+	/* $('#taskContent').delegate('li','dblclick',function(){
 		var taskElement = $(this);
 		console.log(taskElement);
 		taskElement.children('div.taskDetailDiv').hide();
@@ -314,6 +367,51 @@ function taskManager() {
 			taskElement.find('textarea.editTaskDescription').text(description);
 		}
 		
+	}); */
+	$('#taskContent').delegate('.taskLi','dblclick',function(){
+		var taskElement = $(this);
+		console.log(taskElement);
+		
+		/* var currentItem = $(e.target.nextSibling);
+		if (currentItem.siblings('div.editDiv').length){
+			if (currentItem.siblings('div.editDiv').is(':visible')){
+				return;
+			}
+		}#inProgressTasksDiv > ul > li:nth-child(1)
+		//*[@id="inProgressTasksDiv"]/ul/li[1]
+		'div>div>ul>li'
+		if(currentItem.is(":visible"))
+			currentItem.hide(); */
+		
+		taskElement.children('div.taskDetailDiv').hide();
+		if (taskElement.find('div.editDiv').length){
+			if(taskElement.find('div.editDiv').is(':visible')){
+				return;
+			} else {
+				taskElement.find('div.editDiv').show();
+			}
+		} else {
+			var editDiv = '<div class="editDiv" style="display: block">' +
+			'<p>' +
+				'<input class="editTaskTitle edit" type="text" maxlength="50" />' +
+			'</p>' +
+			'<p>' +
+				'<textarea class="editTaskDescription edit" rows="4" cols="30">' +
+				'</textarea>' +
+			'</p>' +
+			'<div class="editSubTasks"></div>' +
+			'<span class="editTaskSaveButton editButton">Save</span>' +
+			'<span class="editTaskCancelButton editButton">Cancel</span>' +
+			'</div>';
+			taskElement.append(editDiv);
+			var title = taskElement.find('p.taskTitle').text();
+			var description = taskElement.find('div.taskDescriptionDiv').html();
+			taskElement.find('input.editTaskTitle').val(title);
+			taskElement.find('textarea.editTaskDescription').val(description);
+			
+			inspectSubtasks(searchSubtasks(taskElement),taskElement.find('.editSubTasks')); 
+		}
+		taskElement.children('div.taskDetailDiv').hide();
 	});
 	$('#taskContent').delegate('.editTaskCancelButton','click',function(){
 		var taskElement = $(this).parents("li:first");
@@ -323,9 +421,81 @@ function taskManager() {
 	$('#taskContent').delegate('.editTaskSaveButton','click',function(){
 		UpdateTask(this);
 	});
+	var currentOpenSubtasks = [];
+	function searchSubtasks(taskElement){
+		var subtasks = null;
+		for(var i in currentOpenSubtasks)
+			if(currentOpenSubtasks[i].taskId == taskElement.attr('data-id'))
+				subtasks = i;
+		return subtasks;
+	}
+	function inspectSubtasks(o,selector){
+		if(currentOpenSubtasks[o].subTasks == null){
+			currentOpenSubtasks[o].subTasks = undefined;
+		}
+		function generateNewTask(o){
+			return {
+			ID: (o.length+1),
+			Status: false,
+			Title: ''
+		  }
+		}
+		function searchSubtask(sid){
+			var id = 0;
+			for(var i in currentOpenSubtasks[o].subTasks)
+				if(currentOpenSubtasks[o].subTasks[i].ID == sid)
+					id = i;
+			return id;	
+		}
+		console.log(currentOpenSubtasks[o].subTasks);
+		if(typeof(currentOpenSubtasks[o].subTasks) != "undefined"){
+			for(var i in currentOpenSubtasks[o].subTasks)
+			selector.append('<li data-id="'+currentOpenSubtasks[o].subTasks[i].ID+'"><input type="checkbox" '+(currentOpenSubtasks[o].subTasks[i].Status?'checked':'')+'/><span>'+currentOpenSubtasks[o].subTasks[i].Title+'</span></li>');
+		}
+		else{
+		  var nt = generateNewTask([]);
+		  currentOpenSubtasks[o].subTasks = [];
+		  currentOpenSubtasks[o].subTasks.push(nt);
+		  console.log(currentOpenSubtasks[o].subTasks);
+		  selector.append('<li data-id="'+nt.ID+'"><input type="checkbox" '+(nt.Status?'checked':'')+'/><input type="text" value="'+nt.Title+'" /></li>');
+		}
+		selector.delegate('input[type="checkbox"]','click',function(){
+			var par = $(this).parent();
+			currentOpenSubtasks[o].subTasks[searchSubtask(par.attr('data-id'))].Status = par.find('input[type="checkbox"]').is(':checked');
+			console.log(currentOpenSubtasks[o].subTasks[searchSubtask(par.attr('data-id'))]);
+		});
+		selector.delegate('span','click',function(){
+			var par = $(this).parent();
+			$(this).replaceWith('<input type="text" value="'+$(this).text()+'">');
+			par.find('input[type="text"]').focus();
+		});
+		selector.delegate('input[type="text"]','focusout',function(){
+			if($(this).val() != ''){
+				var par = $(this).parent();
+				currentOpenSubtasks[o].subTasks[searchSubtask(parseInt(par.attr('data-id')))] = {
+					ID: parseInt(par.attr('data-id')),
+					Title: $(this).val(),
+					Status: par.find('input[type="checkbox"]').is(':checked')
+				}
+				$(this).replaceWith('<span>'+$(this).val()+'</span>');
+				par.find('input[type="text"]').focus();
+			}
+		});
+		selector.delegate('input','keydown',function(e){
+			console.log(selector);
+			if(e.keyCode == 13){
+				var nt = generateNewTask(currentOpenSubtasks[o].subTasks);
+				currentOpenSubtasks[o].subTasks.push(nt);
+				$(this).parent().after('<li data-id="'+nt.ID+'"><input type="checkbox" '+(nt.Status?'checked':'')+'/><input type="text" value="'+nt.Title+'" /></li>');
+				var par = $(this).parent();
+				par.next().find('input[type="text"]').focus();
+				e.preventDefault ? e.preventDefault() : e.returnValue = false;
+				return false;
+			}
+		});
+	}	
 	function UpdateTask(taskElement) {
-		var taskElement = $(taskElement).parents("li:first");
-		console.log(taskElement);
+		var taskElement = $(taskElement).parents("li.taskLi");
 		var taskTitleElement = taskElement.find('input.editTaskTitle');
 		var updatedTitle = taskTitleElement.val();
 		if (updatedTitle == '') {
@@ -334,6 +504,8 @@ function taskManager() {
 			return;
 		}
 		var updatedDescription = taskElement.find('textarea.editTaskDescription').val();
+		var updatedDescription = taskElement.find('textarea.editTaskDescription').val();
+		var updatedSubtask = JSON.stringify(currentOpenSubtasks[searchSubtasks($(taskElement))]);
 		var taskId = taskElement.data('id');
 		$.ajax({
 			url: "/OSA/_api/web/lists/GetByTitle('Задачи сотрудников')/Items(" + taskId + ")",
@@ -347,10 +519,11 @@ function taskManager() {
 			},
 			data: JSON.stringify({
 				'__metadata': {
-					'type': 'SP.Data.ProjectTasksListItem'
+					'type': 'SP.Data.ListListItem'
 				},
 				'Title': updatedTitle,
-				'Body': updatedDescription
+				'Body': updatedDescription,
+				'subTasks': updatedSubtask
 		}),
 		success: function() {
 			taskElement.find('div.editDiv').hide();
@@ -365,5 +538,4 @@ function taskManager() {
 			}
 		});
 	}
-	
 };
