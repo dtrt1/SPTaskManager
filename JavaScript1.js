@@ -49,11 +49,17 @@ function taskManager() {
 			selectProjectBody+= '<option value="'+ projectId +'">' + projectTitle + '</option>'
 		}
 		$('#ProjectName').append(selectProjectBody);
+		$('#ProjectName2').append(selectProjectBody);
 	});
 	
-	var divIDExecutor = 'peoplePickerDivExecutor',divIDManager = 'peoplePickerDivManager';
-	initializePeoplePicker(divIDExecutor);
-	initializePeoplePicker(divIDManager);
+	var PPDExecutor = 'peoplePickerDivExecutor',
+		PPDManager = 'peoplePickerDivManager',
+		PPDManagerFilter = 'peoplePickerDivManagerFilter',
+		PPDExecutorFilter = 'peoplePickerDivExecutorFilter';
+	initializePeoplePicker(PPDExecutor);
+	initializePeoplePicker(PPDManager);
+	initializePeoplePicker(PPDManagerFilter);
+	initializePeoplePicker(PPDExecutorFilter);
 	
 	function initializePeoplePicker(peoplePickerElementId) {
 
@@ -75,9 +81,8 @@ function taskManager() {
 	
 	// Query the picker for user information.
 	$('#getUserBut').on('click', function(){
-		var executors = [];
-		getUserInfo(divIDExecutor);
-		getUserInfo(divIDManager);
+		getUserInfo(PPDExecutor);
+		getUserInfo(PPDManager);
 	})
 	function getUserInfo(divID) {
 		// Get the people picker object from the page.
@@ -86,7 +91,7 @@ function taskManager() {
 		var users = peoplePicker.GetAllUserInfo();
 		for (var i = 0; i < users.length; i++) {
 			getUserId(users[i].Key, divID);
-			}
+		}
 	}
 
 	// Get the user ID.
@@ -97,11 +102,17 @@ function taskManager() {
 		context.executeQueryAsync(
 			 function(){
 				 switch (divID){
-					 case divIDExecutor :
+					 case PPDExecutor :
 					 newTaskObject.AssignedToId.results.push(user.get_id());
 					 break;
-					 case divIDManager :
+					 case PPDManager :
 					 newTaskObject.ProjectManagerId = user.get_id();
+					 break;
+					 case PPDManagerFilter :
+					 filteredQueryObj.ProjectManagerId = user.get_id();
+					 break;
+					 case PPDExecutorFilter :
+					 filteredQueryObj.AssignedToId = user.get_id();
 					 break;
 				 }
 				 console.log(newTaskObject);				 
@@ -111,48 +122,90 @@ function taskManager() {
 			 }
 		);
 	}
-
 	
-	$.ajax({
-		url: "/OSA/_api/web/lists/GetByTitle('Задачи сотрудников')/Items",
-		method: "GET",
-		headers: {
-			"accept": "application/json;odata=verbose"
-		},
-	}).success(function(data) {
-		console.log(data);
-		for (var i in data.d.results){
-			var taskId = data.d.results[i].ID;
-			var taskTitle = data.d.results[i].Title;
-			var taskStatus = data.d.results[i].Status;
-			var taskBody = '<li class="taskLi" data-id="'+taskId+'" data-status="'+taskStatus+'">' +
-								'<div class="deleteDiv">' +
-									'<span class="deleteButton delete">x</span>' +
-									'<span class="confirmDelete" style="display: none">' +
-										'Are you sure?' +
-										'<span class="yesDeleteButton delete">Yes</span>' +
-										'<span class="noDeleteButton delete">No</span>' +
-									'</span>' +
-								'</div>' +
-								'<p class="taskTitle">'+taskTitle+'</p>' +
-								'<div class="taskDetailDiv" data-id="'+taskId+'" data-status="'+taskStatus+'">' +
-									'<div class="taskDescriptionDiv" data-id="'+taskId+'" data-status="'+taskStatus+'"></div>' +
-									'<div class="taskSubtaskDiv" data-id="'+taskId+'" data-status="'+taskStatus+'"></div>' +
-								'</div>' +
-							'</li>';
-			switch (taskStatus){
-				case "Не начата" : 
-				$('#notStartedTasksDiv>ul').append(taskBody);
+	var filteredQueryObj = {};
+	
+	$('#filtersDiv > button').click(getFilteredTasks());
+	
+	/* $('#addTaskButton').click(function () {
+		$('#newTaskContent').slideToggle('500', 'swing');
+		$('.sp-peoplepicker-initialHelpText').html('Введите имя или адрес электронной почты...');
+		$(this).val(clickedAddTaskButton? "Создать новую задачу": "Скрыть");
+		clickedAddTaskButton = !clickedAddTaskButton;
+	}); */
+	
+	function getFilteredTasks(){
+		filteredQueryObj.ProjectManagerId = 0;
+		filteredQueryObj.AssignedToId = 0;
+		var buttonProject = 0;
+		$('#filtersDiv > button').filter( ".active" ).each(function(){
+			var objVal = $(this).html();
+			switch (objVal){
+				case 'Руководитель' :
+				getUserInfo(PPDManagerFilter);
 				break;
-				case "В процессе выполнения" : 
-				$('#inProgressTasksDiv>ul').append(taskBody);
+				case 'Исполнитель' :
+				getUserInfo(PPDExecutorFilter);
 				break;
-				case "Завершена" : 
-				$('#completedTasksDiv>ul').append(taskBody);
+				case 'Проект' :
+				buttonProject = parseInt($('#ProjectNameFilter').find(':selected').val());
 				break;
 			}
-		}
-	});
+			console.log('getFilteredTasks exec');
+		});
+		
+		url = "/OSA/_api/web/lists/GetByTitle('Задачи сотрудников')/Items?$filter=ProjectNameId eq " +  buttonProject;
+		console.log('WTF??')
+		/* filteredQueryObj.ProjectManagerId,filteredQueryObj.AssignedToId,buttonProject
+			mngID,exID,prjID */
+		getTasks(url);
+	}
+	
+	getTasks("/OSA/_api/web/lists/GetByTitle('Задачи сотрудников')/Items");
+	
+	function getTasks(url){
+		$.ajax({
+			url: url,
+			method: "GET",
+			headers: {
+				"accept": "application/json;odata=verbose"
+			},
+		}).success(function(data) {
+			console.log(data);
+			$('.taskDiv > ul').empty()
+			for (var i in data.d.results){
+				var taskId = data.d.results[i].ID;
+				var taskTitle = data.d.results[i].Title;
+				var taskStatus = data.d.results[i].Status;
+				var taskBody = '<li class="taskLi" data-id="'+taskId+'" data-status="'+taskStatus+'">' +
+									'<div class="deleteDiv">' +
+										'<span class="deleteButton delete">x</span>' +
+										'<span class="confirmDelete" style="display: none">' +
+											'Are you sure?' +
+											'<span class="yesDeleteButton delete">Yes</span>' +
+											'<span class="noDeleteButton delete">No</span>' +
+										'</span>' +
+									'</div>' +
+									'<p class="taskTitle">'+taskTitle+'</p>' +
+									'<div class="taskDetailDiv" data-id="'+taskId+'" data-status="'+taskStatus+'">' +
+										'<div class="taskDescriptionDiv" data-id="'+taskId+'" data-status="'+taskStatus+'"></div>' +
+										'<div class="taskSubtaskDiv" data-id="'+taskId+'" data-status="'+taskStatus+'"></div>' +
+									'</div>' +
+								'</li>';
+				switch (taskStatus){
+					case "Не начата" : 
+					$('#notStartedTasksDiv>ul').append(taskBody);
+					break;
+					case "В процессе выполнения" : 
+					$('#inProgressTasksDiv>ul').append(taskBody);
+					break;
+					case "Завершена" : 
+					$('#completedTasksDiv>ul').append(taskBody);
+					break;
+				}
+			}
+		});
+	}
 	$('#taskContent').delegate('p.taskTitle','click',function(e){
 		var currentItem = $(e.target.nextSibling);
 		if (currentItem.siblings('div.editDiv').length){
