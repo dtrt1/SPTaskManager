@@ -5,18 +5,17 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title></title> -->
 <!-- <script type="text/javascript" src="/_layouts/15/sp.js"></script> -->
-<!-- <script src="/OSA/Webparts/jQuery/jquery-2.2.3.min.js" type="text/javascript"></script> -->
-<script src="/Webparts/TaskManager/JavaScript1.js" type="text/javascript"></script>
+<script src="/OSA/Webparts/jQuery/jquery-2.2.3.min.js" type="text/javascript"></script>
+<script src="/OSA/Webparts/TaskManager/JavaScript1.js" type="text/javascript"></script>
 <script src="/_layouts/15/clienttemplates.js" type="text/javascript"></script>
 <script src="/_layouts/15/clientforms.js" type="text/javascript"></script>
 <script src="/_layouts/15/clientpeoplepicker.js" type="text/javascript"></script>
 <script src="/_layouts/15/autofill.js" type="text/javascript"></script>
-<!-- <script src="/_layouts/15/sp.RequestExecutor.js" type="text/javascript"></script> -->
 <script src="/_layouts/15/sp.runtime.js" type="text/javascript"></script>
-<!-- <script src="/_layouts/15/sp.js" type="text/javascript"></script> -->
 <!-- <script src="/_layouts/15/sp.core.js" type="text/javascript"></script> -->
-
-<link href="/Webparts/TaskManager/style1.css" rel="stylesheet" type="text/css" />
+<script src="/_layouts/15/sp.js" type="text/javascript"></script>
+<script src="/_layouts/15/datepicker.js" type="text/javascript"></script>
+<link href="/OSA/Webparts/TaskManager/style1.css" rel="stylesheet" type="text/css" />
 <!-- </head>
 <body> -->
 	<div id="newTaskDiv">
@@ -31,10 +30,27 @@
 						<nobr>Имя задачи<span class="ms-accentText" title="Это поле является обязательным."> *</span></nobr>
 						</h3>
 					</td>
-					<td valign="top" width="350px" class="ms-formbody">
+					<td valign="top" width="412px" class="ms-formbody">
 						<input id="newTaskTitle" class="newTask" type="text" maxlength="255" title="Имя задачи Обязательное поле"/>
 					</td>
 				</tr>
+				
+				<!-- <tr>
+					<td nowrap="true" valign="top" width="113px" class="ms-formlabel">
+						<h3 class="ms-standardheader">
+							<nobr>Срок<span class="ms-accentText" title="Это поле является обязательным."> *</span></nobr>
+						</h3>
+					</td>
+					<td valign="top" width="350px" class="ms-formbody">
+						<input id="myDateField" type="text" />
+						<a href="#" style="vertical-align:top;" onclick="clickDatePicker('myDateField','webServerRelativeUrl/_layouts/iframe.aspx?&cal=1&lcid=1033&langid=1033&tz=07:59:59.9990906&ww=0111110&fdow=0&fwoy=0&hj=0&swn=False&minjday=109207&maxjday=2666269&date=', '', event); return false;">
+							<img id="myDateFieldDatePickerImage" border="0" alt="Select a date from the calendar." src="/_layouts/15/images/calendar_25.gif?rev=23">
+						</a>
+					
+					<iframe id="myDateFieldDatePickerFrame" title="Select a date from the calendar." style="display:none; position:absolute; width:200px; z-index:101;" src="/_layouts/15/images/blank.gif?rev=23"></iframe>
+					</td>
+				</tr> -->
+				
 				<tr>
 					<td nowrap="true" valign="top" width="113px" class="ms-formlabel">
 						<h3 class="ms-standardheader">
@@ -69,7 +85,9 @@
 					<nobr>Описание<span class="ms-accentText" title="Это поле является обязательным."> *</span></nobr>
 				</h3></td>
 					<td valign="top" width="350px" class="ms-formbody">
-						<span dir="none"><div class="ms-rtestate-field ms-rtefield ms-inputBox" id="Body_7662cd2c-f069-4dba-9e35-082cf976e170_$TextField_topDiv"><div id="Body_7662cd2c-f069-4dba-9e35-082cf976e170_$TextField_inplacerte_label" style="display:none">Редактор форматированного текста Описание</div><div class="ms-rtestate-write ms-rteflags-0 ms-rtestate-field" id="Body_7662cd2c-f069-4dba-9e35-082cf976e170_$TextField_inplacerte" style="min-height:84px" aria-labelledby="Body_7662cd2c-f069-4dba-9e35-082cf976e170_$TextField_inplacerte_label" contenteditable="true" role="textbox" aria-autocomplete="both" aria-haspopup="true" aria-multiline="true"><p>​</p></div><div style="clear : both;"></div></div><span dir="ltr"><input type="hidden" id="Body_7662cd2c-f069-4dba-9e35-082cf976e170_$TextField_spSave" value="<p>​</p>"><input type="hidden" name="ms-rtefocuselementid" id="ms-rtefocuselementid" value=""></span></span>
+							<div class="ms-rtestate-field ms-rtefield ms-inputBox" id="Body_7662cd2c-f069-4dba-9e35-082cf976e170_$TextField_topDiv"><div id="Body_7662cd2c-f069-4dba-9e35-082cf976e170_$TextField_inplacerte_label" style="display:none">Редактор форматированного текста Описание</div>
+								<div class="" id="addNewTaskDescription" style="max-width:430px" contenteditable="true"></div>
+							</div>
 					</td>
 				</tr>
 				<tr>
@@ -90,7 +108,7 @@
 						</td>
 						<td width="99%" class="ms-toolbar" nowrap="nowrap"><img src="/_layouts/15/images/blank.gif?rev=23" width="1" height="18" alt=""></td>
 						<td class="ms-toolbar" nowrap="nowrap">
-							<input type="button" name="SaveButton" value="Сохранить" onclick="" id="" class="ms-ButtonHeightWidth" target="_self">
+							<input type="button" id="SaveAddTaskButton" value="Сохранить" onclick="" id="" class="ms-ButtonHeightWidth" target="_self">
 					</td> </tr> </tbody></table>
 					</td>
 					<td class="ms-separator">&nbsp;</td>

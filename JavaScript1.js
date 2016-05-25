@@ -1,10 +1,37 @@
 ﻿$(function(){
 	ExecuteOrDelayUntilScriptLoaded(taskManager, 'sp.js');
+	SP.SOD.loadMultiple(['sp.js','clientpeoplepicker.js','datepicker.js','jquery-2.2.3.min.js','clienttemplates.js','clientforms.js','autofill.js','sp.runtime.js'], taskManager);
 });
 function taskManager() {
 	$('#filtersDiv > button').click(function(){
 		$(this).toggleClass('active');
 	});
+	
+	/* var initializeDatePickers = function () { 
+	var calendarOptions = [];
+	calendarOptions.push(_spPageContextInfo.webServerRelativeUrl + '/' + _spPageContextInfo.layoutsUrl + '/iframe.aspx?');
+	calendarOptions.push('&cal=1');
+	calendarOptions.push('&lcid=1033');
+	calendarOptions.push('&langid=1033');
+	calendarOptions.push('&tz=-08:00:00.0002046');
+	calendarOptions.push('&ww=0111110');
+	calendarOptions.push('&fdow=0');
+	calendarOptions.push('&fwoy=0');
+	calendarOptions.push('&hj=0');
+	calendarOptions.push('&swn=false');
+	calendarOptions.push('&minjday=109207');
+	calendarOptions.push('&maxjday=2666269');
+	calendarOptions.push('&date=');
+
+	$('[field-type="DateTime"]').each(function (index) {
+		var id = $(this).attr('id');
+
+		$(this).after('<iframe id="' + id + 'DatePickerFrame" title="Select a date from the calendar." style="display:none; position:absolute; width:200px; z-index:101;" src="/_layouts/15/images/blank.gif?rev=23"></iframe>');
+		$(this).after('<a href="#" style="vertical-align:top;"><img id="' + id + 'DatePickerImage" border="0" alt="Select a date from the calendar." src="/_layouts/15/images/calendar_25.gif?rev=23"></a>');
+		$(this).next('a').attr('onclick', 'clickDatePicker("' + id + '", "' + calendarOptions.join('') + '", '', event); return false;');
+	});
+}; */
+	
 	$.ajax({
 		url: "/OSA/_api/web/lists/getbytitle('Список проектов')/items?$select=Title,ID",
 		method: "GET",
@@ -24,9 +51,9 @@ function taskManager() {
 		$('#ProjectName').append(selectProjectBody);
 	});
 	
-	var divID1 = 'peoplePickerDivExecutor',divID2 = 'peoplePickerDivManager';
-	initializePeoplePicker(divID1);
-	initializePeoplePicker(divID2);
+	var divIDExecutor = 'peoplePickerDivExecutor',divIDManager = 'peoplePickerDivManager';
+	initializePeoplePicker(divIDExecutor);
+	initializePeoplePicker(divIDManager);
 	
 	function initializePeoplePicker(peoplePickerElementId) {
 
@@ -37,7 +64,7 @@ function taskManager() {
 		schema['ResolvePrincipalSource'] = 15;
 		schema['AllowMultipleValues'] = true;
 		schema['MaximumEntitySuggestions'] = 50;
-		schema['Width'] = '350px';
+		schema['Width'] = '412px';
 
 		// Render and initialize the picker. 
 		// Pass the ID of the DOM element that contains the picker, an array of initial
@@ -45,11 +72,12 @@ function taskManager() {
 		// picker properties.
 		SPClientPeoplePicker_InitStandaloneControlWrapper(peoplePickerElementId, null, schema);
 	}
-
+	
 	// Query the picker for user information.
 	$('#getUserBut').on('click', function(){
-		getUserInfo(divID1);
-		getUserInfo(divID2);
+		var executors = [];
+		getUserInfo(divIDExecutor);
+		getUserInfo(divIDManager);
 	})
 	function getUserInfo(divID) {
 		// Get the people picker object from the page.
@@ -68,7 +96,15 @@ function taskManager() {
 		context.load(user);
 		context.executeQueryAsync(
 			 function(){
-				 $('#userId').append(divID + ' этот юзер имеет ID: ' + user.get_id());
+				 switch (divID){
+					 case divIDExecutor :
+					 newTaskObject.AssignedToId.results.push(user.get_id());
+					 break;
+					 case divIDManager :
+					 newTaskObject.ProjectManagerId = user.get_id();
+					 break;
+				 }
+				 console.log(newTaskObject);				 
 			 }, 
 			 function(sender, args) {
 				console.log('Query failed. Error: ' + args.get_message());
@@ -212,7 +248,7 @@ function taskManager() {
 			},
 			data: JSON.stringify({
 				'__metadata': {
-					'type': 'SP.Data.ListListItem'
+					'type': 'SP.Data.ProjectTasksListItem'
 				},
 				'Status': taskStatus
 		}),
@@ -276,7 +312,7 @@ function taskManager() {
 			AddNewTask(title);
 		}
 	}); */
-	$("#newTaskTitle").keydown(function (e) {
+	/* $("#newTaskTitle").keydown(function (e) {
 		switch (e.keyCode) {
 			// Handle the Enter button to call button click
 			case 13:
@@ -289,12 +325,31 @@ function taskManager() {
 				$(this).val('');
 				break;
 		}
+	}); */
+	var newTaskObject = {};
+	newTaskObject.AssignedToId = {};
+	newTaskObject.AssignedToId.results = [];
+	$('#SaveAddTaskButton').click(function () {
+		var title = $('#newTaskTitle').val();
+		if (title == '') {
+			alert('Please enter a value');
+			$('#newTaskTitle').focus();
+		}
+		var description = $('#addNewTaskDescription').html();
+		var project = parseInt($('#ProjectName').find(':selected').val());
+		console.log(description);
 	});
-	function AddNewTask(Title,Manager,Project,Deadline,Description){
+	function AddNewTask(title,deadline,executors,manager,description,project){
 			var data = {
-				__metadata: { 'type': 'SP.Data.ListListItem'},
-				Title: Title,
-				StartDate: new Date().toISOString()
+				__metadata: { 'type': 'SP.Data.ProjectTasksListItem'},
+				Title: title,
+				StartDate: new Date().toISOString(),
+				AssignedToId: { 'results': executors},
+				ProjectManagerId: manager,
+				ProjectNameId: project,
+				Body: description,
+				
+				
 			};
 		$.ajax({
 			url: "/OSA/_api/web/lists/GetByTitle('Задачи сотрудников')/Items",
@@ -519,7 +574,7 @@ function taskManager() {
 			},
 			data: JSON.stringify({
 				'__metadata': {
-					'type': 'SP.Data.ListListItem'
+					'type': 'SP.Data.ProjectTasksListItem'
 				},
 				'Title': updatedTitle,
 				'Body': updatedDescription,
