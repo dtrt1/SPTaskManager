@@ -47,6 +47,7 @@ function taskManager() {
 			"accept": "application/json;odata=verbose"
 		},
 	}).success(function(data) {
+		
 		var selectProjectBody;
 		
 		for (var i in data.d.results){
@@ -275,6 +276,7 @@ function taskManager() {
 				"accept": "application/json;odata=verbose"
 			},
 		}).success(function(data) {
+			console.log(data);
 			$('.taskDiv > ul').empty()
 			for (var i in data.d.results){
 				var taskId = data.d.results[i].ID;
@@ -329,6 +331,7 @@ function taskManager() {
 				"accept": "application/json;odata=verbose"
 				},
 			}).success(function(item){
+				console.log(item);
 				currentItem.children('div.taskDescriptionDiv').html(item.d.Body);
 				currentItem.children('div.taskSubtaskDiv').html(readSubTasks(item.d.subTasks,guid));
 				if (!currentItem.children('div.moveButtonsDiv').length){
@@ -348,6 +351,7 @@ function taskManager() {
 		}	
 	});
 	function readSubTasks(str,taskId) {
+		console.log(str)
 		var checkValid = false;
 		try {
 			var parsedStr = jQuery.parseJSON(str);
@@ -361,10 +365,16 @@ function taskManager() {
 		}
 		var returnStr = '<ul>';
 		console.log('parset subTasks: '+parsedStr);
-		currentOpenSubtasks.push({taskId: taskId, subTasks: parsedStr});
+		if(currentOpenSubtasks.length > 0 ){
+			if(searchSubtasks($('li[data-id="'+taskId+'"]')) == null)
+				currentOpenSubtasks.push({taskId: parseInt(taskId), subTasks: parsedStr});
+		
+		}
+		else
+		currentOpenSubtasks.push({taskId: parseInt(taskId), subTasks: parsedStr});
+		
 		console.log(currentOpenSubtasks);
 		if (checkValid) {
-			parsedStr = parsedStr.subTasks;
 			for (var i in parsedStr) {
 				var j = parseInt(i) + 1;
 				returnStr += '<li' + (parsedStr[i].Status ? ' style="text-decoration: line-through"' : '') + '>' + j + '.' + parsedStr[i].Title + '</li>';
@@ -404,7 +414,7 @@ function taskManager() {
 			},
 			data: JSON.stringify({
 				'__metadata': {
-					'type': 'SP.Data.ProjectTasksListItem'
+					'type': 'SP.Data.ListListItem'
 				},
 				'Status': taskStatus
 		}),
@@ -497,7 +507,7 @@ function taskManager() {
 	});
 	function AddNewTask(title,deadline,executors,manager,description,project){
 			var data = {
-				__metadata: { 'type': 'SP.Data.ProjectTasksListItem'},
+				__metadata: { 'type': 'SP.Data.ListListItem'},
 				Title: title,
 				StartDate: new Date().toISOString(),
 				AssignedToId: { 'results': executors},
@@ -636,44 +646,41 @@ function taskManager() {
 	function searchSubtasks(taskElement){
 		var subtasks = null;
 		for(var i in currentOpenSubtasks)
-			if(currentOpenSubtasks[i].taskId == taskElement.attr('data-id'))
+			if(parseInt(currentOpenSubtasks[i].taskId) == parseInt(taskElement.attr('data-id')))
 				subtasks = i;
 		return subtasks;
 	}
-	function inspectSubtasks(o,selector){
-		if(currentOpenSubtasks[o].subTasks == null){
-			currentOpenSubtasks[o].subTasks = undefined;
+	function inspectSubtasks(taskId,selector){
+		if(currentOpenSubtasks[taskId].subTasks == null){
+			currentOpenSubtasks[taskId].subTasks = undefined;
 		}
-		function generateNewTask(o){
+		function generateNewTask(objSubTasks){
 			return {
-			ID: (o.length+1),
+			ID: (objSubTasks.length+1),
 			Status: false,
 			Title: ''
 		  }
 		}
-		function searchSubtask(sid){
+		function searchSubtask(subTaskId){
 			var id = 0;
-			for(var i in currentOpenSubtasks[o].subTasks)
-				if(currentOpenSubtasks[o].subTasks[i].ID == sid)
+			for(var i in currentOpenSubtasks[taskId].subTasks)
+				if(currentOpenSubtasks[taskId].subTasks[i].ID == subTaskId)
 					id = i;
 			return id;	
 		}
-		console.log(currentOpenSubtasks[o].subTasks);
-		if(typeof(currentOpenSubtasks[o].subTasks) != "undefined"){
-			for(var i in currentOpenSubtasks[o].subTasks)
-			selector.append('<li data-id="'+currentOpenSubtasks[o].subTasks[i].ID+'"><input type="checkbox" '+(currentOpenSubtasks[o].subTasks[i].Status?'checked':'')+'/><span>'+currentOpenSubtasks[o].subTasks[i].Title+'</span></li>');
+		if(typeof(currentOpenSubtasks[taskId].subTasks) != "undefined"){
+			for(var i in currentOpenSubtasks[taskId].subTasks)
+			selector.append('<li data-id="'+currentOpenSubtasks[taskId].subTasks[i].ID+'"><input type="checkbox" '+(currentOpenSubtasks[taskId].subTasks[i].Status?'checked':'')+'/><span>'+currentOpenSubtasks[taskId].subTasks[i].Title+'</span></li>');
 		}
 		else{
 		  var nt = generateNewTask([]);
-		  currentOpenSubtasks[o].subTasks = [];
-		  currentOpenSubtasks[o].subTasks.push(nt);
-		  console.log(currentOpenSubtasks[o].subTasks);
+		  currentOpenSubtasks[taskId].subTasks = [];
+		  currentOpenSubtasks[taskId].subTasks.push(nt);
 		  selector.append('<li data-id="'+nt.ID+'"><input type="checkbox" '+(nt.Status?'checked':'')+'/><input type="text" value="'+nt.Title+'" /></li>');
 		}
 		selector.delegate('input[type="checkbox"]','click',function(){
 			var par = $(this).parent();
-			currentOpenSubtasks[o].subTasks[searchSubtask(par.attr('data-id'))].Status = par.find('input[type="checkbox"]').is(':checked');
-			console.log(currentOpenSubtasks[o].subTasks[searchSubtask(par.attr('data-id'))]);
+			currentOpenSubtasks[taskId].subTasks[searchSubtask(par.attr('data-id'))].Status = par.find('input[type="checkbox"]').is(':checked');
 		});
 		selector.delegate('span','click',function(){
 			var par = $(this).parent();
@@ -683,7 +690,7 @@ function taskManager() {
 		selector.delegate('input[type="text"]','focusout',function(){
 			if($(this).val() != ''){
 				var par = $(this).parent();
-				currentOpenSubtasks[o].subTasks[searchSubtask(parseInt(par.attr('data-id')))] = {
+				currentOpenSubtasks[taskId].subTasks[searchSubtask(parseInt(par.attr('data-id')))] = {
 					ID: parseInt(par.attr('data-id')),
 					Title: $(this).val(),
 					Status: par.find('input[type="checkbox"]').is(':checked')
@@ -693,10 +700,9 @@ function taskManager() {
 			}
 		});
 		selector.delegate('input','keydown',function(e){
-			console.log(selector);
 			if(e.keyCode == 13){
-				var nt = generateNewTask(currentOpenSubtasks[o].subTasks);
-				currentOpenSubtasks[o].subTasks.push(nt);
+				var nt = generateNewTask(currentOpenSubtasks[taskId].subTasks);
+				currentOpenSubtasks[taskId].subTasks.push(nt);
 				$(this).parent().after('<li data-id="'+nt.ID+'"><input type="checkbox" '+(nt.Status?'checked':'')+'/><input type="text" value="'+nt.Title+'" /></li>');
 				var par = $(this).parent();
 				par.next().find('input[type="text"]').focus();
@@ -707,6 +713,7 @@ function taskManager() {
 	}	
 	function UpdateTask(taskElement) {
 		var taskElement = $(taskElement).parents("li.taskLi");
+		console.log(taskElement);
 		var taskTitleElement = taskElement.find('input.editTaskTitle');
 		var updatedTitle = taskTitleElement.val();
 		if (updatedTitle == '') {
@@ -715,38 +722,47 @@ function taskManager() {
 			return;
 		}
 		var updatedDescription = taskElement.find('textarea.editTaskDescription').val();
-		var updatedDescription = taskElement.find('textarea.editTaskDescription').val();
-		var updatedSubtask = JSON.stringify(currentOpenSubtasks[searchSubtasks($(taskElement))]);
+		var updatedSubtask = JSON.stringify(currentOpenSubtasks[searchSubtasks(taskElement)].subTasks);
+		console.log(updatedSubtask);
+		console.log(currentOpenSubtasks[searchSubtasks(taskElement)])
 		var taskId = taskElement.data('id');
+		var data = {
+				__metadata: { 'type': 'SP.Data.ListListItem'},
+				Title: updatedTitle,
+				Body: updatedDescription,
+				subTasks: updatedSubtask
+			};
 		$.ajax({
 			url: "/OSA/_api/web/lists/GetByTitle('Задачи сотрудников')/Items(" + taskId + ")",
-			method: "POST",
+			method: "PATCH",
 			headers: {
 				"Accept": "application/json;odata=verbose",
 				"X-RequestDigest": $("#__REQUESTDIGEST").val(),
 				"content-Type": "application/json;odata=verbose",
-				"X-HTTP-Method": "MERGE",
 				"If-Match": "*"
 			},
-			data: JSON.stringify({
-				'__metadata': {
-					'type': 'SP.Data.ProjectTasksListItem'
-				},
-				'Title': updatedTitle,
-				'Body': updatedDescription,
-				'subTasks': updatedSubtask
-		}),
-		success: function() {
+			data: JSON.stringify(data)
+		}).success(function(data) {
 			taskElement.find('div.editDiv').hide();
 			taskElement.find('p.taskTitle').html(updatedTitle);
-			var butDiv = taskElement.find('div.moveButtonsDiv');
 			taskElement.find('div.taskDetailDiv').html(updatedDescription);
-			butDiv.appendTo('div.taskDetailDiv');
-			taskElement.find('div.taskDetailDiv').show();
-		},
-		error: function(error) {
-				alert(JSON.stringify(error));
+			taskElement.find('div.taskDetailDiv').append('<div class="taskSubtaskDiv">'+readSubTasks(updatedSubtask,taskId)+'</div>');
+			if (!taskElement.children('div.moveButtonsDiv').length){
+				var taskButton = '<div class="moveButtonsDiv">' +
+									'<img class="moveLeftButton moveButton" src="/_layouts/images/ARRLEFTA.GIF" alt="Move Left" />' +
+									'<img class="moveRightButton moveButton" src="/_layouts/images/ARRRIGHTA.GIF" alt="Move Right" />' +
+								'</div>';
+				taskElement.find('div.taskDetailDiv').append(taskButton).show();
+				switch (taskElement.data('status')) {
+					case "Не начата": taskElement.find('div.taskDetailDiv').find('.moveLeftButton').hide();
+						break;
+					case "Завершена": taskElement.find('div.taskDetailDiv').find('.moveRightButton').hide();
+						break;
+				}
 			}
+			taskElement.find('div.taskDetailDiv').show();
+		}).error(function(error) {
+				console.log(error)
 		});
 	}
 };
