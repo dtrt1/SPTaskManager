@@ -125,39 +125,24 @@
 			</tbody>
 		</table>
 	</div>
-	<br /><br />
-	
-	<div id="taskExecutor"></div>
-	<div id="taskProject"></div>
-	<div id="taskDate"></div>
-	<div id="taskDescription"></div>
-	<!--  style="display:none" -->
-    <div style="display:block">
-        <br/>
-        <input id="getUserBut" type="button" value="Get User Info"></input>
-        <br/>
-        <h1>User ID:</h1>
-        <p id="userId"></p>
-    </div>
-	
-	<div id="filtersDiv">
-		<button type="button">Руководитель</button>
-		<button type="button">Исполнитель</button>
-		<button type="button">Проект</button>
+	<div id="filtersDiv" style="float:left;">
+		<button id="filterButtonManager" type="button">Руководитель</button>
+		<br />
+		<button id="filterButtonExecutor" type="button">Исполнитель</button>
+		<br />
+		<button id="filterButtonProject" type="button">Проект</button>
 	</div>
-	
-	<!-- <div id="filtersDiv">
-		<input type="button" value="Руководитель"></input>
-		<input type="button" value="Исполнитель"></input>
-		<input type="button" value="Проект"></input>
-	</div> -->
-	
-	<div id="filtersDivValues">
+	<div id="filtersDivValues" style="float:left;">
 		<div id="peoplePickerDivManagerFilter"></div>
 		<div id="peoplePickerDivExecutorFilter"></div>
+		<div>
 		<select id="ProjectNameFilter" title="Выберите проект для отображения задач по нему"></select>
+		</div>
 	</div>
-	<br /><br />
+	<div>
+	<br /><br /><br /><br /><br /><br /><br /><br />
+	</div>
+	
 	<!-- Task Content -->
 	<div id="taskContent">
 		<!-- Not Started Tasks -->

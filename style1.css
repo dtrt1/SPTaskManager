@@ -175,7 +175,7 @@
 #filtersDiv > button {
 	display: inline-block;
     padding: 6px 12px;
-    margin-bottom: 0;
+    margin-bottom: 8px;
     font-size: 14px;
     font-weight: 400;
     line-height: 1.42857143;
@@ -195,6 +195,8 @@
 	color: #333;
     background-color: #fff;
     border-color: #ccc;
+	width: 110px;
+	margin-left: 
 }
 
 #filtersDiv > button:hover{
@@ -205,6 +207,18 @@
 
 #filtersDiv > button.active{
 	color: #fff;
-    background-color: #337ab7;
-    border-color: #adadad;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+}
+#filtersDivValues > div{
+	margin-left: 15px;
+	margin-bottom: 16px;
+	margin-top: 5px;
+	width: 300px;
+}
+#ProjectNameFilter{
+	height: 25px;
+}
+.ms-webpartPage-root {
+	border-spacing: 0px;
 }

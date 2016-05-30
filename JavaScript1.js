@@ -5,8 +5,16 @@
 function taskManager() {
 	$('#filtersDiv > button').click(function(){
 		$(this).toggleClass('active');
+		getFilteredTasks();
 	});
-	
+	$('#ProjectNameFilter').change(function(){
+		if ($('#filterButtonProject').hasClass('active')){
+			getFilteredTasks();
+		}
+	});
+	if ($('#filtersDiv').next().is('br')){
+		$('#filtersDiv').next().remove();
+	}
 	/* var initializeDatePickers = function () { 
 	var calendarOptions = [];
 	calendarOptions.push(_spPageContextInfo.webServerRelativeUrl + '/' + _spPageContextInfo.layoutsUrl + '/iframe.aspx?');
@@ -39,7 +47,6 @@ function taskManager() {
 			"accept": "application/json;odata=verbose"
 		},
 	}).success(function(data) {
-		console.log(data);
 		var selectProjectBody;
 		
 		for (var i in data.d.results){
@@ -49,19 +56,19 @@ function taskManager() {
 			selectProjectBody+= '<option value="'+ projectId +'">' + projectTitle + '</option>'
 		}
 		$('#ProjectName').append(selectProjectBody);
-		$('#ProjectName2').append(selectProjectBody);
+		$('#ProjectNameFilter').append(selectProjectBody);
 	});
 	
 	var PPDExecutor = 'peoplePickerDivExecutor',
 		PPDManager = 'peoplePickerDivManager',
 		PPDManagerFilter = 'peoplePickerDivManagerFilter',
 		PPDExecutorFilter = 'peoplePickerDivExecutorFilter';
-	initializePeoplePicker(PPDExecutor);
-	initializePeoplePicker(PPDManager);
-	initializePeoplePicker(PPDManagerFilter);
-	initializePeoplePicker(PPDExecutorFilter);
+	initializePeoplePicker(PPDExecutor,'412px');
+	initializePeoplePicker(PPDManager,'412px');
+	initializePeoplePicker(PPDManagerFilter,'270px');
+	initializePeoplePicker(PPDExecutorFilter,'270px');
 	
-	function initializePeoplePicker(peoplePickerElementId) {
+	function initializePeoplePicker(peoplePickerElementId,width) {
 
 		// Create a schema to store picker properties, and set the properties.
 		var schema = {};
@@ -70,13 +77,28 @@ function taskManager() {
 		schema['ResolvePrincipalSource'] = 15;
 		schema['AllowMultipleValues'] = true;
 		schema['MaximumEntitySuggestions'] = 50;
-		schema['Width'] = '412px';
+		schema['Width'] = width;
 
 		// Render and initialize the picker. 
 		// Pass the ID of the DOM element that contains the picker, an array of initial
 		// PickerEntity objects to set the picker value, and a schema that defines
 		// picker properties.
 		SPClientPeoplePicker_InitStandaloneControlWrapper(peoplePickerElementId, null, schema);
+		
+		if (peoplePickerElementId == PPDExecutorFilter){
+			SPClientPeoplePicker.SPClientPeoplePickerDict.peoplePickerDivExecutorFilter_TopSpan.OnControlResolvedUserChanged = function(){
+				if ($('#filterButtonExecutor').hasClass('active')){
+					getFilteredTasks();
+				}
+			}
+		}
+		if (peoplePickerElementId == PPDManagerFilter){
+			SPClientPeoplePicker.SPClientPeoplePickerDict.peoplePickerDivManagerFilter_TopSpan.OnControlResolvedUserChanged = function(){
+				if ($('#filterButtonManager').hasClass('active')){
+					getFilteredTasks();
+				}
+			}
+		}
 	}
 	
 	// Query the picker for user information.
@@ -89,11 +111,37 @@ function taskManager() {
 		var peoplePicker = SPClientPeoplePicker.SPClientPeoplePickerDict[divID+'_TopSpan'];
 		// Get information about all users.
 		var users = peoplePicker.GetAllUserInfo();
+		switch (divID){
+					 /* case PPDExecutor :
+					 newTaskObject.AssignedToId.results.push(user.get_id());
+					 break;
+					 case PPDManager :
+					 newTaskObject.ProjectManagerId = user.get_id();
+					 break; */
+					 case PPDManagerFilter :
+					 if (typeof users[0] !== 'undefined'){
+						 filteredQueryObj.ProjectManagerTitle = users[0].DisplayText;
+					 }
+					 break;
+					 case PPDExecutorFilter :
+					 if (typeof users[0] !== 'undefined'){
+						filteredQueryObj.AssignedToTitle = users[0].DisplayText;
+					 }
+					 break;
+				 }
 		for (var i = 0; i < users.length; i++) {
 			getUserId(users[i].Key, divID);
 		}
 	}
+	
+	var filteredQueryObj = {};
+	filteredQueryObj.ProjectManagerId = 0;
+	filteredQueryObj.ProjectManagerTitle = '';
+	filteredQueryObj.AssignedToTitle = '';
+	filteredQueryObj.AssignedToId = 0;
+	var restUrl = '';
 
+	
 	// Get the user ID.
 	function getUserId(loginName, divID) {
 		var context = new SP.ClientContext.get_current();
@@ -115,7 +163,6 @@ function taskManager() {
 					 filteredQueryObj.AssignedToId = user.get_id();
 					 break;
 				 }
-				 console.log(newTaskObject);				 
 			 }, 
 			 function(sender, args) {
 				console.log('Query failed. Error: ' + args.get_message());
@@ -123,20 +170,11 @@ function taskManager() {
 		);
 	}
 	
-	var filteredQueryObj = {};
-	
-	$('#filtersDiv > button').click(getFilteredTasks());
-	
-	/* $('#addTaskButton').click(function () {
-		$('#newTaskContent').slideToggle('500', 'swing');
-		$('.sp-peoplepicker-initialHelpText').html('Введите имя или адрес электронной почты...');
-		$(this).val(clickedAddTaskButton? "Создать новую задачу": "Скрыть");
-		clickedAddTaskButton = !clickedAddTaskButton;
-	}); */
-	
 	function getFilteredTasks(){
 		filteredQueryObj.ProjectManagerId = 0;
 		filteredQueryObj.AssignedToId = 0;
+		filteredQueryObj.ProjectManagerTitle = '';
+		filteredQueryObj.AssignedToTitle = '';
 		var buttonProject = 0;
 		$('#filtersDiv > button').filter( ".active" ).each(function(){
 			var objVal = $(this).html();
@@ -151,17 +189,83 @@ function taskManager() {
 				buttonProject = parseInt($('#ProjectNameFilter').find(':selected').val());
 				break;
 			}
-			console.log('getFilteredTasks exec');
 		});
 		
-		url = "/OSA/_api/web/lists/GetByTitle('Задачи сотрудников')/Items?$filter=ProjectNameId eq " +  buttonProject;
-		console.log('WTF??')
-		/* filteredQueryObj.ProjectManagerId,filteredQueryObj.AssignedToId,buttonProject
-			mngID,exID,prjID */
-		getTasks(url);
+		outer:
+		if (buttonProject){
+					   if(filteredQueryObj.AssignedToTitle){
+									   if(filteredQueryObj.ProjectManagerTitle){
+													  restUrl = "/OSA/_api/web/lists/GetByTitle('Задачи сотрудников')/Items?$select=ID,Title,Status,AssignedTo/Title,ProjectName/Id,ProjectManager/Title&$expand=AssignedTo,ProjectName,ProjectManager&$filter=AssignedTo eq '"+filteredQueryObj.AssignedToTitle+"' and ProjectName/Id eq "+buttonProject+" and ProjectManager/Title eq '"+filteredQueryObj.ProjectManagerTitle+"'&$orderby=DueDate"
+													  break outer;
+									   }
+									   restUrl = "/OSA/_api/web/lists/GetByTitle('Задачи сотрудников')/Items?$select=ID,Title,Status,AssignedTo/Title,ProjectName/Id&$expand=AssignedTo,ProjectName&$filter=AssignedTo eq '"+filteredQueryObj.AssignedToTitle+"' and ProjectName/Id eq "+buttonProject+"&$orderby=DueDate"
+									   break outer;
+					   } else if(filteredQueryObj.ProjectManagerTitle){
+									   restUrl = "/OSA/_api/web/lists/GetByTitle('Задачи сотрудников')/Items?$select=ID,Title,Status,ProjectName/Id,ProjectManager/Title&$expand=ProjectName,ProjectManager&$filter=ProjectName/Id eq "+buttonProject+" and ProjectManager/Title eq '"+filteredQueryObj.ProjectManagerTitle+"'&$orderby=DueDate"
+									   break outer;
+					   }
+					   restUrl = "/OSA/_api/web/lists/GetByTitle('Задачи сотрудников')/Items?$select=ID,Title,Status,ProjectName/Title,ProjectName/Id&$expand=ProjectName&$filter=ProjectName/Id eq "+buttonProject+"&$orderby=DueDate";
+					   break outer;
+		} else if (filteredQueryObj.AssignedToTitle){
+					   if(filteredQueryObj.ProjectManagerTitle){
+									   restUrl = "/OSA/_api/web/lists/GetByTitle('Задачи сотрудников')/Items?$select=ID,Title,Status,AssignedTo/Title,ProjectManager/Title&$expand=AssignedTo,ProjectManager&$filter=AssignedTo eq '"+filteredQueryObj.AssignedToTitle+"' and ProjectManager/Title eq '"+filteredQueryObj.ProjectManagerTitle+"'&$orderby=DueDate"
+									   break outer;
+					   }
+					   restUrl = "/OSA/_api/web/lists/GetByTitle('Задачи сотрудников')/Items?$select=ID,Title,Status,AssignedTo/Title&$expand=AssignedTo&$filter=AssignedTo eq '"+filteredQueryObj.AssignedToTitle+"'&$orderby=DueDate"
+					   break outer;
+		} else if (filteredQueryObj.ProjectManagerTitle){
+					   restUrl = "/OSA/_api/web/lists/GetByTitle('Задачи сотрудников')/Items?$select=ID,Title,Status,ProjectManager/Title&$expand=ProjectManager&$filter=ProjectManager/Title eq '"+filteredQueryObj.ProjectManagerTitle+"'&$orderby=DueDate"
+					   break outer;
+		} else {
+			restUrl = "/OSA/_api/web/lists/GetByTitle('Задачи сотрудников')/Items"
+		}
+		getTasks(restUrl);
 	}
 	
 	getTasks("/OSA/_api/web/lists/GetByTitle('Задачи сотрудников')/Items");
+	
+	/* var viewXml = "<Where><Eq><FieldRef Name='AssignedToId' LookupId='True' /><Value Type='Integer'>1036</Value></Eq></Where><ViewFields><FieldRef Name='Title' /><FieldRef Name='AssignedTo' /></ViewFields>";
+	
+	$.ajax({ 
+	   url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/GetByTitle('Задачи сотрудников')/getitems", 
+	   method: "POST",
+	   data: "{ 'query' : {'__metadata': { 'type': 'SP.CamlQuery' }, \"ViewXml\": \"" + viewXml + "\" }}",
+	   headers: {
+		    "Accept": "application/json;odata=verbose",
+			"X-RequestDigest": $("#__REQUESTDIGEST").val(),
+			"content-Type": "application/json;odata=verbose",
+		}, 
+	   success: function (data) { 
+		  if (data.d.results) { 
+			 // TODO: handle the data  
+			 console.log('START');
+			 console.log(data.d.results);
+			 console.log('FINISH');
+			 
+		  } 
+	   }, 
+	   error: function (xhr) { 
+		  alert(xhr.status + ': ' + xhr.statusText); 
+	   } 
+	});  */
+	
+	/* $.ajax({ 
+	   url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/GetByTitle('Задачи сотрудников')/Items?$select=Title,AssignedToId&$filter=substringof('Гридинский',AssignedTo)", 
+	   type: "GET", 
+	   contentType: "application/atom+xml;type=entry", 
+	   headers: {"accept": "application/atom+xml"}, 
+	   success: function (data) { 
+		  if (data.d.results) { 
+			 // TODO: handle the data  
+			 alert('handle the data'); 
+			 console.log(data.d.results);
+			 
+		  } 
+	   }, 
+	   error: function (xhr) { 
+		  alert(xhr.status + ': ' + xhr.statusText); 
+	   } 
+	}); */ 
 	
 	function getTasks(url){
 		$.ajax({
@@ -171,7 +275,6 @@ function taskManager() {
 				"accept": "application/json;odata=verbose"
 			},
 		}).success(function(data) {
-			console.log(data);
 			$('.taskDiv > ul').empty()
 			for (var i in data.d.results){
 				var taskId = data.d.results[i].ID;
